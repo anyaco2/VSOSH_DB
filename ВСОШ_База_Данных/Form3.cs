@@ -27,7 +27,7 @@ namespace ВСОШ_База_Данных
         public Form3()
         {
             InitializeComponent();
-            FillComboBox("select * from public.subject_area", "subject_area_name", comboBox1);
+            FillComboBox("select * from public.subject_area", "subject_area_name", comboBox1);//Подгрузка предметов из БД
         }
 
         public class Stroka
@@ -252,7 +252,7 @@ namespace ВСОШ_База_Данных
             NpgsqlCommand comand = new NpgsqlCommand();
             comand.Connection = sqlConnection;
             comand.CommandType = CommandType.Text;
-            switch (comboBox1.Text)
+            switch (comboBox1.Text) //Т.к. олимпиады по предметам начинаются в разных классах, то пока так
             {
                 case "литература":
                 case "английский язык":
@@ -419,7 +419,7 @@ namespace ВСОШ_База_Данных
             }
         }
 
-        private void button4_Click(object sender, EventArgs e)
+        private void button4_Click(object sender, EventArgs e) //Статистика
         {
             string report = comboBox2.Text;
             switch (report)
@@ -436,25 +436,25 @@ namespace ВСОШ_База_Данных
             }
         }
 
-        private void button5_Click(object sender, EventArgs e)
+        private void button5_Click(object sender, EventArgs e) //Загрузка исходных файлов EXCEL
         {
             importFromExcel();
         }
 
-        private void ReportForOlderClass()
+        private void ReportForOlderClass() //За старший класс
         {
             string comanda = "SELECT subject_name as Предмет, student_surname as Фамилия, student_name as Имя, student_patronimic as Отчество, " +
                 "\"student_class-new\" as \"Класс, за который выступает\", student_class as \"Класс, в котором обучается\" FROM public.\"Results\" " +
                 "WHERE \"student_class-new\" > student_class ORDER BY student_surname ASC";
             exportFromDataBase(comanda);
         }
-        private void ReportByClassAndSubject()
+        private void ReportByClassAndSubject() //По классам и предметам
         {
             exportFromDataBase1();
         }
 
 
-        private void generalReport()
+        private void generalReport() //Общий отчет
         {
             string comanda = "SELECT Count(*) as \"Кол-во фактов участия\", (Select Count(DISTINCT student_surname) as \"Кол-во уникальных участников\" " +
                 "from public.\"Results\"),\r\n\t(SELECT COUNT(*) as \"Кол-во дипломов победителей\" FROM public.\"Results\" where student_status = 'Победитель'), " +
