@@ -7,7 +7,7 @@
     <ProjectGuid>{2EABC5A4-5CFF-4FAF-B224-8D2904DE5888}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>ВСОШ_База_Данных</RootNamespace>
-    <AssemblyName>ВСОШ_База_Данных</AssemblyName>
+    <AssemblyName>VSOSH.UI</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
