@@ -22,15 +22,15 @@ public abstract class SchoolOlympiadResultBase : Entity<Guid>
     /// <param name="finalScore">Итоговый балл.</param>
     /// <param name="currentGrade">Класс, в котором учится.</param>
     /// <param name="gradeCompeting">Класс, за который выступает.</param>
-    protected SchoolOlympiadResultBase(Guid id, 
-        string school, 
-        string participantCode, 
-        StudentName studentName, 
-        string status, 
-        double percentage, 
-        double finalScore, 
-        int currentGrade, 
-        int gradeCompeting) 
+    protected SchoolOlympiadResultBase(Guid id,
+        string school,
+        string participantCode,
+        StudentName studentName,
+        Status status,
+        double percentage,
+        double finalScore,
+        int currentGrade,
+        int? gradeCompeting)
         : base(id)
     {
         School = school;
@@ -43,45 +43,52 @@ public abstract class SchoolOlympiadResultBase : Entity<Guid>
         GradeCompeting = gradeCompeting;
     }
 
+    /// <summary>
+    /// Конструктор для ef-core.
+    /// </summary>
+    protected SchoolOlympiadResultBase()
+    {
+    }
+
     #endregion
-    
+
     #region Properties
 
     /// <summary>
     /// Возвращает образовательное учреждение.
     /// </summary>
     public string School { get; init; }
-    
+
     /// <summary>
     /// Возвращает код участника.
     /// </summary>
     public string ParticipantCode { get; init; }
-    
+
     /// <summary>
     /// Вовзращает ФИО ученика.
     /// </summary>
     public StudentName StudentName { get; init; }
-    
+
     /// <summary>
     /// Возвращает класс, за который выступает ученик.
     /// </summary>
-    public int GradeCompeting { get; init; }
-    
+    public int? GradeCompeting { get; init; }
+
     /// <summary>
     /// Возвращает класс, в котором учится.
     /// </summary>
     public int CurrentGrade { get; init; }
-    
+
     /// <summary>
     /// Возвращает итоговый балл.
     /// </summary>
     public double FinalScore { get; init; }
-    
+
     /// <summary>
     /// Возвращает статус ученика.
     /// </summary>
-    public string Status { get; init; }   
-    
+    public Status Status { get; init; }
+
     /// <summary>
     /// Возвращает процент выполнения.
     /// </summary>

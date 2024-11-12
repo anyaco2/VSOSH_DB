@@ -8,6 +8,7 @@ namespace VSOSH.Domain.Entities;
 public class HistoryResult : SchoolOlympiadResultBase
 {
     #region .ctor
+
     /// <summary>
     /// Инициализирует эксемпляр класса <see cref="HistoryResult" />.
     /// </summary>
@@ -20,8 +21,13 @@ public class HistoryResult : SchoolOlympiadResultBase
     /// <param name="finalScore">Итоговый балл.</param>
     /// <param name="currentGrade">Класс, в котором учится.</param>
     /// <param name="gradeCompeting">Класс, за который выступает.</param>
-    public HistoryResult(Guid id, string school, string participantCode, StudentName studentName, string status, double percentage, double finalScore, int currentGrade, int gradeCompeting) 
+    public HistoryResult(Guid id, string school, string participantCode, StudentName studentName, Status status,
+        double percentage, double finalScore, int currentGrade, int? gradeCompeting)
         : base(id, school, participantCode, studentName, status, percentage, finalScore, currentGrade, gradeCompeting)
+    {
+    }
+
+    private HistoryResult()
     {
     }
 

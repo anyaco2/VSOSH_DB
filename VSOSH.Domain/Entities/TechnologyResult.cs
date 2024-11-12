@@ -7,6 +7,15 @@ namespace VSOSH.Domain.Entities;
 /// </summary>
 public class TechnologyResult : SchoolOlympiadResultBase
 {
+    #region Properties
+
+    /// <summary>
+    /// Возвращает направление практики.
+    /// </summary>
+    public string DirectionPractice { get; init; }
+
+    #endregion
+
     #region .ctor
 
     /// <summary>
@@ -22,20 +31,16 @@ public class TechnologyResult : SchoolOlympiadResultBase
     /// <param name="currentGrade">Класс, в котором учится.</param>
     /// <param name="gradeCompeting">Класс, за который выступает.</param>
     /// <param name="directionPractice">Направление практики.</param>
-    public TechnologyResult(Guid id, string school, string participantCode, StudentName studentName, string status, double percentage, double finalScore, int currentGrade, int gradeCompeting, string directionPractice) 
+    public TechnologyResult(Guid id, string school, string participantCode, StudentName studentName, Status status,
+        double percentage, double finalScore, int currentGrade, int? gradeCompeting, string directionPractice)
         : base(id, school, participantCode, studentName, status, percentage, finalScore, currentGrade, gradeCompeting)
     {
         DirectionPractice = directionPractice;
     }
 
-    #endregion
-
-    #region Properties
-
-    /// <summary>
-    /// Возвращает направление практики.
-    /// </summary>
-    public string DirectionPractice { get; init; }
+    private TechnologyResult()
+    {
+    }
 
     #endregion
 }

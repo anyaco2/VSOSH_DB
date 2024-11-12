@@ -8,6 +8,7 @@ namespace VSOSH.Domain.Entities;
 public class ComputerScienceResult : SchoolOlympiadResultBase
 {
     #region .ctor
+
     /// <summary>
     /// Инициализирует эксемпляр класса <see cref="ComputerScienceResult" />.
     /// </summary>
@@ -20,8 +21,13 @@ public class ComputerScienceResult : SchoolOlympiadResultBase
     /// <param name="finalScore">Итоговый балл.</param>
     /// <param name="currentGrade">Класс, в котором учится.</param>
     /// <param name="gradeCompeting">Класс, за который выступает.</param>
-    public ComputerScienceResult(Guid id, string school, string participantCode, StudentName studentName, string status, double percentage, double finalScore, int currentGrade, int gradeCompeting) 
+    public ComputerScienceResult(Guid id, string school, string participantCode, StudentName studentName, Status status,
+        double percentage, double finalScore, int currentGrade, int? gradeCompeting)
         : base(id, school, participantCode, studentName, status, percentage, finalScore, currentGrade, gradeCompeting)
+    {
+    }
+
+    private ComputerScienceResult()
     {
     }
 

@@ -3,14 +3,14 @@
 namespace VSOSH.Domain.Entities;
 
 /// <summary>
-/// Представляет результат олимпиады по экологии.
+/// Представляет результат олимпиады по немецокму языку.
 /// </summary>
-public class EcologyResult : SchoolOlympiadResultBase
+public class GeographyResult : SchoolOlympiadResultBase
 {
     #region .ctor
 
     /// <summary>
-    /// Инициализирует эксемпляр класса <see cref="EcologyResult" />.
+    /// Инициализирует эксемпляр класса <see cref="GeographyResult" />.
     /// </summary>
     /// <param name="id">Идентификатор результата.</param>
     /// <param name="school">Образовательное учреждение.</param>
@@ -21,13 +21,13 @@ public class EcologyResult : SchoolOlympiadResultBase
     /// <param name="finalScore">Итоговый балл.</param>
     /// <param name="currentGrade">Класс, в котором учится.</param>
     /// <param name="gradeCompeting">Класс, за который выступает.</param>
-    public EcologyResult(Guid id, string school, string participantCode, StudentName studentName, Status status,
+    public GeographyResult(Guid id, string school, string participantCode, StudentName studentName, Status status,
         double percentage, double finalScore, int currentGrade, int? gradeCompeting)
         : base(id, school, participantCode, studentName, status, percentage, finalScore, currentGrade, gradeCompeting)
     {
     }
 
-    private EcologyResult()
+    private GeographyResult()
     {
     }
 

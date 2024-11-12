@@ -25,13 +25,20 @@ public class PhysicalEducationResult : SchoolOlympiadResultBase
     /// <param name="finalScoreInTheory">Итоговый балл по теории.</param>
     /// <param name="preliminaryScoreInPractice">Предварительный балл по практике</param>
     /// <param name="finalScoreInPractice">Итоговый балл по практике.</param>
-    public PhysicalEducationResult(Guid id, string school, string participantCode, StudentName studentName, string status, double percentage, double finalScore, int currentGrade, int gradeCompeting, double preliminaryScoreInTheory, double finalScoreInTheory, double preliminaryScoreInPractice, double finalScoreInPractice) 
+    public PhysicalEducationResult(Guid id, string school, string participantCode, StudentName studentName,
+        Status status, double percentage, double finalScore, int currentGrade, int? gradeCompeting,
+        double preliminaryScoreInTheory, double finalScoreInTheory, double preliminaryScoreInPractice,
+        double finalScoreInPractice)
         : base(id, school, participantCode, studentName, status, percentage, finalScore, currentGrade, gradeCompeting)
     {
         PreliminaryScoreInTheory = preliminaryScoreInTheory;
         FinalScoreInTheory = finalScoreInTheory;
         PreliminaryScoreInPractice = preliminaryScoreInPractice;
         FinalScoreInPractice = finalScoreInPractice;
+    }
+
+    private PhysicalEducationResult()
+    {
     }
 
     #endregion
@@ -42,17 +49,17 @@ public class PhysicalEducationResult : SchoolOlympiadResultBase
     /// Возвращает предварительный балл по теории.
     /// </summary>
     public double PreliminaryScoreInTheory { get; init; }
-    
+
     /// <summary>
     /// Возвращает итоговый балл по теории.
     /// </summary>
     public double FinalScoreInTheory { get; init; }
-    
+
     /// <summary>
     /// Возвращает предварительный балл по практике.
     /// </summary>
     public double PreliminaryScoreInPractice { get; init; }
-    
+
     /// <summary>
     /// Возвращает итоговый балл по практике.
     /// </summary>
