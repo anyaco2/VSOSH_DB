@@ -216,8 +216,8 @@ namespace VSOSH.Dal.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     School = table.Column<string>(type: "text", nullable: false),
                     ParticipantCode = table.Column<string>(type: "text", nullable: false),
-                    GradeCompeting = table.Column<int>(type: "integer", nullable: true),
-                    CurrentGrade = table.Column<int>(type: "integer", nullable: false),
+                    CurrentGrade = table.Column<int>(type: "integer", nullable: true),
+                    GradeCompeting = table.Column<int>(type: "integer", nullable: false),
                     FinalScore = table.Column<double>(type: "double precision", nullable: false),
                     Status = table.Column<string>(type: "text", nullable: false),
                     Percentage = table.Column<double>(type: "double precision", nullable: false),
@@ -238,7 +238,8 @@ namespace VSOSH.Dal.Migrations
                     PreliminaryScoreInTheory = table.Column<double>(type: "double precision", nullable: false),
                     FinalScoreInTheory = table.Column<double>(type: "double precision", nullable: false),
                     PreliminaryScoreInPractice = table.Column<double>(type: "double precision", nullable: false),
-                    FinalScoreInPractice = table.Column<double>(type: "double precision", nullable: false)
+                    FinalScoreInPractice = table.Column<double>(type: "double precision", nullable: false),
+                    Sex = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {

@@ -19,26 +19,30 @@ public class PhysicalEducationResult : SchoolOlympiadResultBase
     /// <param name="status">Статус ученика.</param>
     /// <param name="percentage">Процент выполнения.</param>
     /// <param name="finalScore">Итоговый балл.</param>
-    /// <param name="currentGrade">Класс, в котором учится.</param>
-    /// <param name="gradeCompeting">Класс, за который выступает.</param>
+    /// <param name="gradeCompeting">Класс, в котором учится.</param>
+    /// <param name="currentCompeting">Класс, за который выступает.</param>
     /// <param name="preliminaryScoreInTheory">Предварительный балл по теории.</param>
     /// <param name="finalScoreInTheory">Итоговый балл по теории.</param>
     /// <param name="preliminaryScoreInPractice">Предварительный балл по практике</param>
     /// <param name="finalScoreInPractice">Итоговый балл по практике.</param>
+    /// <param name="sex">Пол ученика.</param>
     public PhysicalEducationResult(Guid id, string school, string participantCode, StudentName studentName,
-        Status status, double percentage, double finalScore, int currentGrade, int? gradeCompeting,
+        Status status, double percentage, double finalScore, int gradeCompeting, int? currentCompeting,
         double preliminaryScoreInTheory, double finalScoreInTheory, double preliminaryScoreInPractice,
-        double finalScoreInPractice)
-        : base(id, school, participantCode, studentName, status, percentage, finalScore, currentGrade, gradeCompeting)
+        double finalScoreInPractice, Sex sex)
+        : base(id, school, participantCode, studentName, status, percentage, finalScore, gradeCompeting,
+            currentCompeting)
     {
         PreliminaryScoreInTheory = preliminaryScoreInTheory;
         FinalScoreInTheory = finalScoreInTheory;
         PreliminaryScoreInPractice = preliminaryScoreInPractice;
         FinalScoreInPractice = finalScoreInPractice;
+        Sex = sex;
     }
 
-    private PhysicalEducationResult()
+    private PhysicalEducationResult(Sex sex)
     {
+        Sex = sex;
     }
 
     #endregion
@@ -64,6 +68,11 @@ public class PhysicalEducationResult : SchoolOlympiadResultBase
     /// Возвращает итоговый балл по практике.
     /// </summary>
     public double FinalScoreInPractice { get; init; }
+
+    /// <summary>
+    /// Возвращает пол ученика.
+    /// </summary>
+    public Sex Sex { get; init; }
 
     #endregion
 }

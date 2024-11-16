@@ -34,10 +34,10 @@ public class SchoolOlympiadResultBaseConfiguration : IEntityTypeConfiguration<Sc
         builder.Property(s => s.Status)
             .HasConversion<EnumToStringConverter<Status>>()
             .HasColumnName("Status");
+        builder.Property(s => s.CurrentCompeting)
+            .HasColumnName("CurrentGrade");
         builder.Property(s => s.GradeCompeting)
             .HasColumnName("GradeCompeting");
-        builder.Property(s => s.CurrentGrade)
-            .HasColumnName("CurrentGrade");
         builder.Property(s => s.School)
             .HasColumnName("School");
         builder.Property(s => s.ParticipantCode)

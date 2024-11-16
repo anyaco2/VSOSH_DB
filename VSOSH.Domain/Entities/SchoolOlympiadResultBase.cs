@@ -20,8 +20,8 @@ public abstract class SchoolOlympiadResultBase : Entity<Guid>
     /// <param name="status">Статус ученика.</param>
     /// <param name="percentage">Процент выполнения.</param>
     /// <param name="finalScore">Итоговый балл.</param>
-    /// <param name="currentGrade">Класс, в котором учится.</param>
     /// <param name="gradeCompeting">Класс, за который выступает.</param>
+    /// <param name="currentCompeting">Класс, в котором учится.</param>
     protected SchoolOlympiadResultBase(Guid id,
         string school,
         string participantCode,
@@ -29,8 +29,8 @@ public abstract class SchoolOlympiadResultBase : Entity<Guid>
         Status status,
         double percentage,
         double finalScore,
-        int currentGrade,
-        int? gradeCompeting)
+        int gradeCompeting,
+        int? currentCompeting)
         : base(id)
     {
         School = school;
@@ -39,8 +39,8 @@ public abstract class SchoolOlympiadResultBase : Entity<Guid>
         Status = status;
         Percentage = percentage;
         FinalScore = finalScore;
-        CurrentGrade = currentGrade;
         GradeCompeting = gradeCompeting;
+        CurrentCompeting = currentCompeting;
     }
 
     /// <summary>
@@ -70,14 +70,14 @@ public abstract class SchoolOlympiadResultBase : Entity<Guid>
     public StudentName StudentName { get; init; }
 
     /// <summary>
-    /// Возвращает класс, за который выступает ученик.
-    /// </summary>
-    public int? GradeCompeting { get; init; }
-
-    /// <summary>
     /// Возвращает класс, в котором учится.
     /// </summary>
-    public int CurrentGrade { get; init; }
+    public int? CurrentCompeting { get; init; }
+
+    /// <summary>
+    /// Возвращает класс, за который выступает.
+    /// </summary>
+    public int GradeCompeting { get; init; }
 
     /// <summary>
     /// Возвращает итоговый балл.

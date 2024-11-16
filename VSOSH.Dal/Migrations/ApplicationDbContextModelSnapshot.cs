@@ -28,14 +28,14 @@ namespace VSOSH.Dal.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
 
-                    b.Property<int>("CurrentGrade")
+                    b.Property<int?>("CurrentCompeting")
                         .HasColumnType("integer")
                         .HasColumnName("CurrentGrade");
 
                     b.Property<double>("FinalScore")
                         .HasColumnType("double precision");
 
-                    b.Property<int?>("GradeCompeting")
+                    b.Property<int>("GradeCompeting")
                         .HasColumnType("integer")
                         .HasColumnName("GradeCompeting");
 
@@ -230,6 +230,11 @@ namespace VSOSH.Dal.Migrations
                     b.Property<double>("PreliminaryScoreInTheory")
                         .HasColumnType("double precision")
                         .HasColumnName("PreliminaryScoreInTheory");
+
+                    b.Property<string>("Sex")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("Sex");
 
                     b.ToTable("PhysicalEducationResult", (string)null);
                 });

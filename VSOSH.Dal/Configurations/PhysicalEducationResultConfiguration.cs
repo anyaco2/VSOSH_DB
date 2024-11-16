@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using VSOSH.Domain;
 using VSOSH.Domain.Entities;
 
 namespace VSOSH.Dal.Configurations;
@@ -21,5 +23,8 @@ public class PhysicalEducationResultConfiguration : IEntityTypeConfiguration<Phy
             .HasColumnName("FinalScoreInTheory");
         builder.Property(p => p.PreliminaryScoreInTheory)
             .HasColumnName("PreliminaryScoreInTheory");
+        builder.Property(p => p.Sex)
+            .HasConversion<EnumToStringConverter<Sex>>()
+            .HasColumnName("Sex");
     }
 }

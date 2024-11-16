@@ -13,7 +13,7 @@ using VSOSH.Dal;
 namespace VSOSH.Dal.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241112220401_Initial")]
+    [Migration("20241116073258_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -31,14 +31,14 @@ namespace VSOSH.Dal.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
 
-                    b.Property<int>("CurrentGrade")
+                    b.Property<int?>("CurrentCompeting")
                         .HasColumnType("integer")
                         .HasColumnName("CurrentGrade");
 
                     b.Property<double>("FinalScore")
                         .HasColumnType("double precision");
 
-                    b.Property<int?>("GradeCompeting")
+                    b.Property<int>("GradeCompeting")
                         .HasColumnType("integer")
                         .HasColumnName("GradeCompeting");
 
@@ -233,6 +233,11 @@ namespace VSOSH.Dal.Migrations
                     b.Property<double>("PreliminaryScoreInTheory")
                         .HasColumnType("double precision")
                         .HasColumnName("PreliminaryScoreInTheory");
+
+                    b.Property<string>("Sex")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("Sex");
 
                     b.ToTable("PhysicalEducationResult", (string)null);
                 });

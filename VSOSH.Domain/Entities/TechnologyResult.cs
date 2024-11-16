@@ -28,12 +28,13 @@ public class TechnologyResult : SchoolOlympiadResultBase
     /// <param name="status">Статус ученика.</param>
     /// <param name="percentage">Процент выполнения.</param>
     /// <param name="finalScore">Итоговый балл.</param>
-    /// <param name="currentGrade">Класс, в котором учится.</param>
-    /// <param name="gradeCompeting">Класс, за который выступает.</param>
+    /// <param name="gradeCompeting">Класс, в котором учится.</param>
+    /// <param name="currentCompeting">Класс, за который выступает.</param>
     /// <param name="directionPractice">Направление практики.</param>
     public TechnologyResult(Guid id, string school, string participantCode, StudentName studentName, Status status,
-        double percentage, double finalScore, int currentGrade, int? gradeCompeting, string directionPractice)
-        : base(id, school, participantCode, studentName, status, percentage, finalScore, currentGrade, gradeCompeting)
+        double percentage, double finalScore, int gradeCompeting, int? currentCompeting, string directionPractice)
+        : base(id, school, participantCode, studentName, status, percentage, finalScore, gradeCompeting,
+            currentCompeting)
     {
         DirectionPractice = directionPractice;
     }
