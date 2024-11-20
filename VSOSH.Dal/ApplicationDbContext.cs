@@ -56,50 +56,6 @@ public class ApplicationDbContext : DbContext
     /// </summary>
     public DbSet<SchoolOlympiadResultBase> SchoolOlympiadResultBases { get; } = null!;
 
-    #region Helpers
-
-    private DbSet<ArtResult> ArtResults { get; } = null!;
-
-    private DbSet<AstronomyResult> AstronomyResults { get; } = null!;
-
-    private DbSet<BiologyResult> BiologyResults { get; } = null!;
-
-    private DbSet<ChemistryResult> ChemistryResults { get; } = null!;
-
-    private DbSet<ChineseResult> ChineseResults { get; } = null!;
-
-    private DbSet<ComputerScienceResult> ComputerScienceResults { get; } = null!;
-
-    private DbSet<EcologyResult> EcologyResults { get; } = null!;
-
-    private DbSet<EconomyResult> EconomyResults { get; } = null!;
-
-    private DbSet<EnglishResult> EnglishResults { get; } = null!;
-
-    private DbSet<FrenchResult> FrenchResults { get; } = null!;
-
-    private DbSet<FundamentalsLifeSafetyResult> FundamentalsLifeSafetyResults { get; } = null!;
-
-    private DbSet<GermanResult> GermanResults { get; } = null!;
-
-    private DbSet<GeographyResult> GeographyResults { get; } = null!;
-
-    private DbSet<HistoryResult> HistoryResults { get; } = null!;
-
-    private DbSet<LawResult> LawResults { get; } = null!;
-
-    private DbSet<LiteratureResult> LiteratureResults { get; } = null!;
-
-    private DbSet<MathResult> MathResults { get; } = null!;
-
-    private DbSet<PhysicResult> PhysicResults { get; } = null!;
-
-    private DbSet<RussianResult> RussianResults { get; } = null!;
-
-    private DbSet<SocialStudiesResult> SocialStudiesResults { get; } = null!;
-
-    #endregion
-
     #endregion
 
     #region Overrided
@@ -123,6 +79,85 @@ public class ApplicationDbContext : DbContext
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly(),
             type => type.Namespace!.StartsWith(GetType()
                 .Namespace!));
+        modelBuilder.Entity<RussianResult>()
+            .ToTable("RussianResults")
+            .HasBaseType<SchoolOlympiadResultBase>();
+
+        modelBuilder.Entity<SocialStudiesResult>()
+            .ToTable("SocialStudiesResults")
+            .HasBaseType<SchoolOlympiadResultBase>();
+
+        modelBuilder.Entity<MathResult>()
+            .ToTable("MathResults")
+            .HasBaseType<SchoolOlympiadResultBase>();
+
+        modelBuilder.Entity<PhysicResult>()
+            .ToTable("PhysicResults")
+            .HasBaseType<SchoolOlympiadResultBase>();
+
+        modelBuilder.Entity<BiologyResult>()
+            .ToTable("BiologyResults")
+            .HasBaseType<SchoolOlympiadResultBase>();
+
+        modelBuilder.Entity<ChemistryResult>()
+            .ToTable("ChemistryResults")
+            .HasBaseType<SchoolOlympiadResultBase>();
+
+        modelBuilder.Entity<ComputerScienceResult>()
+            .ToTable("ComputerScienceResults")
+            .HasBaseType<SchoolOlympiadResultBase>();
+
+        modelBuilder.Entity<EcologyResult>()
+            .ToTable("EcologyResults")
+            .HasBaseType<SchoolOlympiadResultBase>();
+
+        modelBuilder.Entity<EconomyResult>()
+            .ToTable("EconomyResults")
+            .HasBaseType<SchoolOlympiadResultBase>();
+
+        modelBuilder.Entity<EnglishResult>()
+            .ToTable("EnglishResults")
+            .HasBaseType<SchoolOlympiadResultBase>();
+
+        modelBuilder.Entity<FrenchResult>()
+            .ToTable("FrenchResults")
+            .HasBaseType<SchoolOlympiadResultBase>();
+
+        modelBuilder.Entity<GermanResult>()
+            .ToTable("GermanResults")
+            .HasBaseType<SchoolOlympiadResultBase>();
+
+        modelBuilder.Entity<ChineseResult>()
+            .ToTable("ChineseResults")
+            .HasBaseType<SchoolOlympiadResultBase>();
+
+        modelBuilder.Entity<ArtResult>()
+            .ToTable("ArtResults")
+            .HasBaseType<SchoolOlympiadResultBase>();
+
+        modelBuilder.Entity<AstronomyResult>()
+            .ToTable("AstronomyResults")
+            .HasBaseType<SchoolOlympiadResultBase>();
+
+        modelBuilder.Entity<GeographyResult>()
+            .ToTable("GeographyResults")
+            .HasBaseType<SchoolOlympiadResultBase>();
+
+        modelBuilder.Entity<HistoryResult>()
+            .ToTable("HistoryResults")
+            .HasBaseType<SchoolOlympiadResultBase>();
+
+        modelBuilder.Entity<LawResult>()
+            .ToTable("LawResults")
+            .HasBaseType<SchoolOlympiadResultBase>();
+
+        modelBuilder.Entity<LiteratureResult>()
+            .ToTable("LiteratureResults")
+            .HasBaseType<SchoolOlympiadResultBase>();
+
+        modelBuilder.Entity<FundamentalsLifeSafetyResult>()
+            .ToTable("FundamentalsLifeSafetyResults")
+            .HasBaseType<SchoolOlympiadResultBase>();
     }
 
     #endregion

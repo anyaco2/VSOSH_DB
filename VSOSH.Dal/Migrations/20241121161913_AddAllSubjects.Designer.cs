@@ -13,8 +13,8 @@ using VSOSH.Dal;
 namespace VSOSH.Dal.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241116073258_Initial")]
-    partial class Initial
+    [Migration("20241121161913_AddAllSubjects")]
+    partial class AddAllSubjects
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -92,126 +92,126 @@ namespace VSOSH.Dal.Migrations
                 {
                     b.HasBaseType("VSOSH.Domain.Entities.SchoolOlympiadResultBase");
 
-                    b.ToTable("ArtResults");
+                    b.ToTable("ArtResults", (string)null);
                 });
 
             modelBuilder.Entity("VSOSH.Domain.Entities.AstronomyResult", b =>
                 {
                     b.HasBaseType("VSOSH.Domain.Entities.SchoolOlympiadResultBase");
 
-                    b.ToTable("AstronomyResults");
+                    b.ToTable("AstronomyResults", (string)null);
                 });
 
             modelBuilder.Entity("VSOSH.Domain.Entities.BiologyResult", b =>
                 {
                     b.HasBaseType("VSOSH.Domain.Entities.SchoolOlympiadResultBase");
 
-                    b.ToTable("BiologyResults");
+                    b.ToTable("BiologyResults", (string)null);
                 });
 
             modelBuilder.Entity("VSOSH.Domain.Entities.ChemistryResult", b =>
                 {
                     b.HasBaseType("VSOSH.Domain.Entities.SchoolOlympiadResultBase");
 
-                    b.ToTable("ChemistryResults");
+                    b.ToTable("ChemistryResults", (string)null);
                 });
 
             modelBuilder.Entity("VSOSH.Domain.Entities.ChineseResult", b =>
                 {
                     b.HasBaseType("VSOSH.Domain.Entities.SchoolOlympiadResultBase");
 
-                    b.ToTable("ChineseResults");
+                    b.ToTable("ChineseResults", (string)null);
                 });
 
             modelBuilder.Entity("VSOSH.Domain.Entities.ComputerScienceResult", b =>
                 {
                     b.HasBaseType("VSOSH.Domain.Entities.SchoolOlympiadResultBase");
 
-                    b.ToTable("ComputerScienceResults");
+                    b.ToTable("ComputerScienceResults", (string)null);
                 });
 
             modelBuilder.Entity("VSOSH.Domain.Entities.EcologyResult", b =>
                 {
                     b.HasBaseType("VSOSH.Domain.Entities.SchoolOlympiadResultBase");
 
-                    b.ToTable("EcologyResults");
+                    b.ToTable("EcologyResults", (string)null);
                 });
 
             modelBuilder.Entity("VSOSH.Domain.Entities.EconomyResult", b =>
                 {
                     b.HasBaseType("VSOSH.Domain.Entities.SchoolOlympiadResultBase");
 
-                    b.ToTable("EconomyResults");
+                    b.ToTable("EconomyResults", (string)null);
                 });
 
             modelBuilder.Entity("VSOSH.Domain.Entities.EnglishResult", b =>
                 {
                     b.HasBaseType("VSOSH.Domain.Entities.SchoolOlympiadResultBase");
 
-                    b.ToTable("EnglishResults");
+                    b.ToTable("EnglishResults", (string)null);
                 });
 
             modelBuilder.Entity("VSOSH.Domain.Entities.FrenchResult", b =>
                 {
                     b.HasBaseType("VSOSH.Domain.Entities.SchoolOlympiadResultBase");
 
-                    b.ToTable("FrenchResults");
+                    b.ToTable("FrenchResults", (string)null);
                 });
 
             modelBuilder.Entity("VSOSH.Domain.Entities.FundamentalsLifeSafetyResult", b =>
                 {
                     b.HasBaseType("VSOSH.Domain.Entities.SchoolOlympiadResultBase");
 
-                    b.ToTable("FundamentalsLifeSafetyResults");
+                    b.ToTable("FundamentalsLifeSafetyResults", (string)null);
                 });
 
             modelBuilder.Entity("VSOSH.Domain.Entities.GeographyResult", b =>
                 {
                     b.HasBaseType("VSOSH.Domain.Entities.SchoolOlympiadResultBase");
 
-                    b.ToTable("GeographyResults");
+                    b.ToTable("GeographyResults", (string)null);
                 });
 
             modelBuilder.Entity("VSOSH.Domain.Entities.GermanResult", b =>
                 {
                     b.HasBaseType("VSOSH.Domain.Entities.SchoolOlympiadResultBase");
 
-                    b.ToTable("GermanResults");
+                    b.ToTable("GermanResults", (string)null);
                 });
 
             modelBuilder.Entity("VSOSH.Domain.Entities.HistoryResult", b =>
                 {
                     b.HasBaseType("VSOSH.Domain.Entities.SchoolOlympiadResultBase");
 
-                    b.ToTable("HistoryResults");
+                    b.ToTable("HistoryResults", (string)null);
                 });
 
             modelBuilder.Entity("VSOSH.Domain.Entities.LawResult", b =>
                 {
                     b.HasBaseType("VSOSH.Domain.Entities.SchoolOlympiadResultBase");
 
-                    b.ToTable("LawResults");
+                    b.ToTable("LawResults", (string)null);
                 });
 
             modelBuilder.Entity("VSOSH.Domain.Entities.LiteratureResult", b =>
                 {
                     b.HasBaseType("VSOSH.Domain.Entities.SchoolOlympiadResultBase");
 
-                    b.ToTable("LiteratureResults");
+                    b.ToTable("LiteratureResults", (string)null);
                 });
 
             modelBuilder.Entity("VSOSH.Domain.Entities.MathResult", b =>
                 {
                     b.HasBaseType("VSOSH.Domain.Entities.SchoolOlympiadResultBase");
 
-                    b.ToTable("MathResults");
+                    b.ToTable("MathResults", (string)null);
                 });
 
             modelBuilder.Entity("VSOSH.Domain.Entities.PhysicResult", b =>
                 {
                     b.HasBaseType("VSOSH.Domain.Entities.SchoolOlympiadResultBase");
 
-                    b.ToTable("PhysicResults");
+                    b.ToTable("PhysicResults", (string)null);
                 });
 
             modelBuilder.Entity("VSOSH.Domain.Entities.PhysicalEducationResult", b =>
@@ -246,14 +246,14 @@ namespace VSOSH.Dal.Migrations
                 {
                     b.HasBaseType("VSOSH.Domain.Entities.SchoolOlympiadResultBase");
 
-                    b.ToTable("RussianResults");
+                    b.ToTable("RussianResults", (string)null);
                 });
 
             modelBuilder.Entity("VSOSH.Domain.Entities.SocialStudiesResult", b =>
                 {
                     b.HasBaseType("VSOSH.Domain.Entities.SchoolOlympiadResultBase");
 
-                    b.ToTable("SocialStudiesResults");
+                    b.ToTable("SocialStudiesResults", (string)null);
                 });
 
             modelBuilder.Entity("VSOSH.Domain.Entities.TechnologyResult", b =>
@@ -266,6 +266,168 @@ namespace VSOSH.Dal.Migrations
                         .HasColumnName("DirectionPractice");
 
                     b.ToTable("TechnologyResult", (string)null);
+                });
+
+            modelBuilder.Entity("VSOSH.Domain.Entities.ArtResult", b =>
+                {
+                    b.HasOne("VSOSH.Domain.Entities.SchoolOlympiadResultBase", null)
+                        .WithOne()
+                        .HasForeignKey("VSOSH.Domain.Entities.ArtResult", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("VSOSH.Domain.Entities.AstronomyResult", b =>
+                {
+                    b.HasOne("VSOSH.Domain.Entities.SchoolOlympiadResultBase", null)
+                        .WithOne()
+                        .HasForeignKey("VSOSH.Domain.Entities.AstronomyResult", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("VSOSH.Domain.Entities.BiologyResult", b =>
+                {
+                    b.HasOne("VSOSH.Domain.Entities.SchoolOlympiadResultBase", null)
+                        .WithOne()
+                        .HasForeignKey("VSOSH.Domain.Entities.BiologyResult", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("VSOSH.Domain.Entities.ChemistryResult", b =>
+                {
+                    b.HasOne("VSOSH.Domain.Entities.SchoolOlympiadResultBase", null)
+                        .WithOne()
+                        .HasForeignKey("VSOSH.Domain.Entities.ChemistryResult", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("VSOSH.Domain.Entities.ChineseResult", b =>
+                {
+                    b.HasOne("VSOSH.Domain.Entities.SchoolOlympiadResultBase", null)
+                        .WithOne()
+                        .HasForeignKey("VSOSH.Domain.Entities.ChineseResult", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("VSOSH.Domain.Entities.ComputerScienceResult", b =>
+                {
+                    b.HasOne("VSOSH.Domain.Entities.SchoolOlympiadResultBase", null)
+                        .WithOne()
+                        .HasForeignKey("VSOSH.Domain.Entities.ComputerScienceResult", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("VSOSH.Domain.Entities.EcologyResult", b =>
+                {
+                    b.HasOne("VSOSH.Domain.Entities.SchoolOlympiadResultBase", null)
+                        .WithOne()
+                        .HasForeignKey("VSOSH.Domain.Entities.EcologyResult", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("VSOSH.Domain.Entities.EconomyResult", b =>
+                {
+                    b.HasOne("VSOSH.Domain.Entities.SchoolOlympiadResultBase", null)
+                        .WithOne()
+                        .HasForeignKey("VSOSH.Domain.Entities.EconomyResult", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("VSOSH.Domain.Entities.EnglishResult", b =>
+                {
+                    b.HasOne("VSOSH.Domain.Entities.SchoolOlympiadResultBase", null)
+                        .WithOne()
+                        .HasForeignKey("VSOSH.Domain.Entities.EnglishResult", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("VSOSH.Domain.Entities.FrenchResult", b =>
+                {
+                    b.HasOne("VSOSH.Domain.Entities.SchoolOlympiadResultBase", null)
+                        .WithOne()
+                        .HasForeignKey("VSOSH.Domain.Entities.FrenchResult", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("VSOSH.Domain.Entities.FundamentalsLifeSafetyResult", b =>
+                {
+                    b.HasOne("VSOSH.Domain.Entities.SchoolOlympiadResultBase", null)
+                        .WithOne()
+                        .HasForeignKey("VSOSH.Domain.Entities.FundamentalsLifeSafetyResult", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("VSOSH.Domain.Entities.GeographyResult", b =>
+                {
+                    b.HasOne("VSOSH.Domain.Entities.SchoolOlympiadResultBase", null)
+                        .WithOne()
+                        .HasForeignKey("VSOSH.Domain.Entities.GeographyResult", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("VSOSH.Domain.Entities.GermanResult", b =>
+                {
+                    b.HasOne("VSOSH.Domain.Entities.SchoolOlympiadResultBase", null)
+                        .WithOne()
+                        .HasForeignKey("VSOSH.Domain.Entities.GermanResult", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("VSOSH.Domain.Entities.HistoryResult", b =>
+                {
+                    b.HasOne("VSOSH.Domain.Entities.SchoolOlympiadResultBase", null)
+                        .WithOne()
+                        .HasForeignKey("VSOSH.Domain.Entities.HistoryResult", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("VSOSH.Domain.Entities.LawResult", b =>
+                {
+                    b.HasOne("VSOSH.Domain.Entities.SchoolOlympiadResultBase", null)
+                        .WithOne()
+                        .HasForeignKey("VSOSH.Domain.Entities.LawResult", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("VSOSH.Domain.Entities.LiteratureResult", b =>
+                {
+                    b.HasOne("VSOSH.Domain.Entities.SchoolOlympiadResultBase", null)
+                        .WithOne()
+                        .HasForeignKey("VSOSH.Domain.Entities.LiteratureResult", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("VSOSH.Domain.Entities.MathResult", b =>
+                {
+                    b.HasOne("VSOSH.Domain.Entities.SchoolOlympiadResultBase", null)
+                        .WithOne()
+                        .HasForeignKey("VSOSH.Domain.Entities.MathResult", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("VSOSH.Domain.Entities.PhysicResult", b =>
+                {
+                    b.HasOne("VSOSH.Domain.Entities.SchoolOlympiadResultBase", null)
+                        .WithOne()
+                        .HasForeignKey("VSOSH.Domain.Entities.PhysicResult", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("VSOSH.Domain.Entities.PhysicalEducationResult", b =>

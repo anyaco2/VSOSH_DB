@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace VSOSH.Dal.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class AddAllSubjects : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -20,6 +20,12 @@ namespace VSOSH.Dal.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ArtResults", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ArtResults_SchoolOlympiadResultBase_Id",
+                        column: x => x.Id,
+                        principalTable: "SchoolOlympiadResultBase",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -31,6 +37,12 @@ namespace VSOSH.Dal.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AstronomyResults", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AstronomyResults_SchoolOlympiadResultBase_Id",
+                        column: x => x.Id,
+                        principalTable: "SchoolOlympiadResultBase",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -42,6 +54,12 @@ namespace VSOSH.Dal.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_BiologyResults", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_BiologyResults_SchoolOlympiadResultBase_Id",
+                        column: x => x.Id,
+                        principalTable: "SchoolOlympiadResultBase",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -53,6 +71,12 @@ namespace VSOSH.Dal.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ChemistryResults", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ChemistryResults_SchoolOlympiadResultBase_Id",
+                        column: x => x.Id,
+                        principalTable: "SchoolOlympiadResultBase",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -64,6 +88,12 @@ namespace VSOSH.Dal.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ChineseResults", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ChineseResults_SchoolOlympiadResultBase_Id",
+                        column: x => x.Id,
+                        principalTable: "SchoolOlympiadResultBase",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -75,6 +105,12 @@ namespace VSOSH.Dal.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ComputerScienceResults", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ComputerScienceResults_SchoolOlympiadResultBase_Id",
+                        column: x => x.Id,
+                        principalTable: "SchoolOlympiadResultBase",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -86,6 +122,12 @@ namespace VSOSH.Dal.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_EcologyResults", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_EcologyResults_SchoolOlympiadResultBase_Id",
+                        column: x => x.Id,
+                        principalTable: "SchoolOlympiadResultBase",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -97,6 +139,12 @@ namespace VSOSH.Dal.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_EconomyResults", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_EconomyResults_SchoolOlympiadResultBase_Id",
+                        column: x => x.Id,
+                        principalTable: "SchoolOlympiadResultBase",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -108,6 +156,12 @@ namespace VSOSH.Dal.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_EnglishResults", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_EnglishResults_SchoolOlympiadResultBase_Id",
+                        column: x => x.Id,
+                        principalTable: "SchoolOlympiadResultBase",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -119,6 +173,12 @@ namespace VSOSH.Dal.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_FrenchResults", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_FrenchResults_SchoolOlympiadResultBase_Id",
+                        column: x => x.Id,
+                        principalTable: "SchoolOlympiadResultBase",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -130,6 +190,12 @@ namespace VSOSH.Dal.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_FundamentalsLifeSafetyResults", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_FundamentalsLifeSafetyResults_SchoolOlympiadResultBase_Id",
+                        column: x => x.Id,
+                        principalTable: "SchoolOlympiadResultBase",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -141,6 +207,12 @@ namespace VSOSH.Dal.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_GeographyResults", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_GeographyResults_SchoolOlympiadResultBase_Id",
+                        column: x => x.Id,
+                        principalTable: "SchoolOlympiadResultBase",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -152,6 +224,12 @@ namespace VSOSH.Dal.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_GermanResults", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_GermanResults_SchoolOlympiadResultBase_Id",
+                        column: x => x.Id,
+                        principalTable: "SchoolOlympiadResultBase",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -163,6 +241,12 @@ namespace VSOSH.Dal.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_HistoryResults", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_HistoryResults_SchoolOlympiadResultBase_Id",
+                        column: x => x.Id,
+                        principalTable: "SchoolOlympiadResultBase",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -174,6 +258,12 @@ namespace VSOSH.Dal.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_LawResults", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_LawResults_SchoolOlympiadResultBase_Id",
+                        column: x => x.Id,
+                        principalTable: "SchoolOlympiadResultBase",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -185,6 +275,12 @@ namespace VSOSH.Dal.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_LiteratureResults", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_LiteratureResults_SchoolOlympiadResultBase_Id",
+                        column: x => x.Id,
+                        principalTable: "SchoolOlympiadResultBase",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -196,6 +292,12 @@ namespace VSOSH.Dal.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_MathResults", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MathResults_SchoolOlympiadResultBase_Id",
+                        column: x => x.Id,
+                        principalTable: "SchoolOlympiadResultBase",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -207,45 +309,8 @@ namespace VSOSH.Dal.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_PhysicResults", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "SchoolOlympiadResultBase",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    School = table.Column<string>(type: "text", nullable: false),
-                    ParticipantCode = table.Column<string>(type: "text", nullable: false),
-                    CurrentGrade = table.Column<int>(type: "integer", nullable: true),
-                    GradeCompeting = table.Column<int>(type: "integer", nullable: false),
-                    FinalScore = table.Column<double>(type: "double precision", nullable: false),
-                    Status = table.Column<string>(type: "text", nullable: false),
-                    Percentage = table.Column<double>(type: "double precision", nullable: false),
-                    FirstName = table.Column<string>(type: "text", nullable: false),
-                    LastName = table.Column<string>(type: "text", nullable: false),
-                    MiddleName = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_SchoolOlympiadResultBase", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "PhysicalEducationResult",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    PreliminaryScoreInTheory = table.Column<double>(type: "double precision", nullable: false),
-                    FinalScoreInTheory = table.Column<double>(type: "double precision", nullable: false),
-                    PreliminaryScoreInPractice = table.Column<double>(type: "double precision", nullable: false),
-                    FinalScoreInPractice = table.Column<double>(type: "double precision", nullable: false),
-                    Sex = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PhysicalEducationResult", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PhysicalEducationResult_SchoolOlympiadResultBase_Id",
+                        name: "FK_PhysicResults_SchoolOlympiadResultBase_Id",
                         column: x => x.Id,
                         principalTable: "SchoolOlympiadResultBase",
                         principalColumn: "Id",
@@ -280,24 +345,6 @@ namespace VSOSH.Dal.Migrations
                     table.PrimaryKey("PK_SocialStudiesResults", x => x.Id);
                     table.ForeignKey(
                         name: "FK_SocialStudiesResults_SchoolOlympiadResultBase_Id",
-                        column: x => x.Id,
-                        principalTable: "SchoolOlympiadResultBase",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "TechnologyResult",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    DirectionPractice = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TechnologyResult", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_TechnologyResult_SchoolOlympiadResultBase_Id",
                         column: x => x.Id,
                         principalTable: "SchoolOlympiadResultBase",
                         principalColumn: "Id",
@@ -360,9 +407,6 @@ namespace VSOSH.Dal.Migrations
                 name: "MathResults");
 
             migrationBuilder.DropTable(
-                name: "PhysicalEducationResult");
-
-            migrationBuilder.DropTable(
                 name: "PhysicResults");
 
             migrationBuilder.DropTable(
@@ -370,12 +414,6 @@ namespace VSOSH.Dal.Migrations
 
             migrationBuilder.DropTable(
                 name: "SocialStudiesResults");
-
-            migrationBuilder.DropTable(
-                name: "TechnologyResult");
-
-            migrationBuilder.DropTable(
-                name: "SchoolOlympiadResultBase");
         }
     }
 }
