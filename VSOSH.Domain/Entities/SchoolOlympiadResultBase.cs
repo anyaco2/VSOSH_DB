@@ -8,6 +8,38 @@ namespace VSOSH.Domain.Entities;
 /// </summary>
 public abstract class SchoolOlympiadResultBase : Entity<Guid>
 {
+    /// <summary>
+    /// Возвращает строковое представление типа результата.
+    /// </summary>
+    /// <returns>Название предмета в строковом представлении.</returns>
+    public string GetResultName() =>
+        this switch
+        {
+            ArtResult => "искусство (МХК)",
+            AstronomyResult => "астрономия",
+            BiologyResult => "биология",
+            ChemistryResult => "химия",
+            ChineseResult => "китайский язык",
+            ComputerScienceResult => "информатика",
+            EcologyResult => "экология",
+            EconomyResult => "экономика",
+            EnglishResult => "английский язык",
+            FrenchResult => "французский язык",
+            FundamentalsLifeSafetyResult => "основы безопасности и защиты родины",
+            GeographyResult => "география",
+            GermanResult => "немецкий язык",
+            HistoryResult => "история",
+            LawResult => "право",
+            LiteratureResult => "литература",
+            MathResult => "математика",
+            PhysicalEducationResult => "физическая культура",
+            PhysicResult => "физика",
+            RussianResult => "русский язык",
+            SocialStudiesResult => "обществознание",
+            TechnologyResult => "труды",
+            _ => throw new InvalidOperationException("Неизвестный тип результата")
+        };
+
     #region .ctor
 
     /// <summary>

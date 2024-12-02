@@ -3,7 +3,7 @@
 /// <summary>
 /// Представляет информацию об excel данных.
 /// </summary>
-public static class ExcelInfo
+public static class ExcelResultInfo
 {
     /// <summary>
     /// Возвращает название столбца с названием предмета по олимпиаде.

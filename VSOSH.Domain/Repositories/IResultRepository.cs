@@ -1,4 +1,5 @@
-﻿using VSOSH.Domain.Entities;
+﻿using System.Linq.Expressions;
+using VSOSH.Domain.Entities;
 
 namespace VSOSH.Domain.Repositories;
 
@@ -15,4 +16,21 @@ public interface IResultRepository
     /// <returns>Результат задачи по добавлению результатов по олимпиаде.</returns>
     Task AddRangeAsync(IReadOnlyCollection<SchoolOlympiadResultBase> resultBases,
         CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Возвращает коллекцию результатов по условию.
+    /// </summary>
+    /// <param name="findExpression">Условие.</param>
+    /// <param name="cancellationToken"><see cref="CancellationToken" />.</param>
+    /// <typeparam name="T"><see cref="SchoolOlympiadResultBase" />.</typeparam>
+    /// <returns>Коллекция результатов по условию.</returns>
+    Task<IReadOnlyCollection<T>?> FindRangeAsync<T>(Expression<Func<T, bool>>? findExpression = null,
+        CancellationToken cancellationToken = default) where T : SchoolOlympiadResultBase;
+
+    /// <summary>
+    /// Возвращает общий отчет.
+    /// </summary>
+    /// <param name="cancellationToken"><see cref="CancellationToken" />.</param>
+    /// <returns>Общий отчет.</returns>
+    Task<GeneralReport?> GetGeneralReport(CancellationToken cancellationToken = default);
 }

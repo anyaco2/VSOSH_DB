@@ -1,6 +1,6 @@
-﻿namespace ВСОШ_База_Данных
+﻿namespace VSOSH.UI
 {
-    partial class Form3
+    partial class MainWindow
     {
         /// <summary>
         /// Required designer variable.
@@ -172,7 +172,7 @@
             this.Controls.Add(this.comboBox2);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.comboBox1);
-            this.Name = "Form3";
+            this.Name = "MainWindow";
             this.Text = "Form3";
             this.ResumeLayout(false);
 

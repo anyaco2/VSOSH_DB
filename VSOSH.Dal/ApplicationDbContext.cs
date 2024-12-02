@@ -24,6 +24,15 @@ public class ApplicationDbContext : DbContext
 
     #endregion
 
+    #region Properties
+
+    /// <summary>
+    /// Вовзращает данные о результатах олимпиады.
+    /// </summary>
+    public DbSet<SchoolOlympiadResultBase> SchoolOlympiadResultBases => Set<SchoolOlympiadResultBase>();
+
+    #endregion
+
     #region .ctor
 
     /// <summary>Инициализирует тип <see cref="ApplicationDbContext"/>.</summary>
@@ -46,15 +55,6 @@ public class ApplicationDbContext : DbContext
         : base(options)
     {
     }
-
-    #endregion
-
-    #region Properties
-
-    /// <summary>
-    /// Вовзращает данные о результатах олимпиады.
-    /// </summary>
-    public DbSet<SchoolOlympiadResultBase> SchoolOlympiadResultBases { get; } = null!;
 
     #endregion
 

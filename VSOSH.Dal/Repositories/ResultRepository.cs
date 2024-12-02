@@ -1,4 +1,6 @@
-﻿using VSOSH.Domain.Entities;
+﻿using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
+using VSOSH.Domain.Entities;
 using VSOSH.Domain.Repositories;
 
 namespace VSOSH.Dal.Repositories;
@@ -15,10 +17,41 @@ public class ResultRepository(ApplicationDbContext dbContext) : IResultRepositor
 
     #endregion
 
+    /// <inheritdoc />
     public async Task AddRangeAsync(IReadOnlyCollection<SchoolOlympiadResultBase> resultBases,
         CancellationToken cancellationToken = default)
     {
         await _dbContext.AddRangeAsync(resultBases, cancellationToken);
         await _dbContext.SaveChangesAsync(cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public async Task<IReadOnlyCollection<T>?> FindRangeAsync<T>(Expression<Func<T, bool>>? findExpression = null,
+        CancellationToken cancellationToken = default) where T : SchoolOlympiadResultBase
+    {
+        if (findExpression is null)
+        {
+            return await _dbContext
+                .SchoolOlympiadResultBases
+                .AsNoTrackingWithIdentityResolution()
+                .OfType<T>()
+                .OrderBy(r => r.GradeCompeting)
+                .ToListAsync(cancellationToken);
+        }
+
+        return await _dbContext
+            .SchoolOlympiadResultBases
+            .AsNoTrackingWithIdentityResolution()
+            .OfType<T>()
+            .Where(findExpression)
+            .OrderBy(r => r.GradeCompeting)
+            .ToListAsync(cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public async Task<GeneralReport?> GetGeneralReport(CancellationToken cancellationToken = default)
+    {
+        return await _dbContext.Set<GeneralReport>()
+            .FirstOrDefaultAsync(cancellationToken);
     }
 }
