@@ -20,170 +20,177 @@
             base.Dispose(disposing);
         }
 
-        #region Windows Form Designer generated code
+		#region Windows Form Designer generated code
 
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
-        private void InitializeComponent()
-        {
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.button3 = new System.Windows.Forms.Button();
-            this.comboBox2 = new System.Windows.Forms.ComboBox();
-            this.button4 = new System.Windows.Forms.Button();
-            this.button5 = new System.Windows.Forms.Button();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.SuspendLayout();
-            // 
-            // comboBox1
-            // 
-            this.comboBox1.BackColor = System.Drawing.SystemColors.InactiveBorder;
-            this.comboBox1.Font = new System.Drawing.Font("Cambria", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(68, 188);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(222, 25);
-            this.comboBox1.TabIndex = 2;
-            // 
-            // button3
-            // 
-            this.button3.BackColor = System.Drawing.Color.DarkViolet;
-            this.button3.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.button3.FlatAppearance.BorderColor = System.Drawing.Color.Cyan;
-            this.button3.FlatAppearance.BorderSize = 100;
-            this.button3.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Cyan;
-            this.button3.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Cyan;
-            this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.button3.Font = new System.Drawing.Font("Cambria", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.button3.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.button3.Location = new System.Drawing.Point(296, 175);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(121, 45);
-            this.button3.TabIndex = 3;
-            this.button3.Text = "Скачать";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
-            // 
-            // comboBox2
-            // 
-            this.comboBox2.BackColor = System.Drawing.SystemColors.InactiveBorder;
-            this.comboBox2.Font = new System.Drawing.Font("Cambria", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Items.AddRange(new object[] {
-            "Общий отчёт",
-            "По классам и предметам",
-            "За более старший класс"});
-            this.comboBox2.Location = new System.Drawing.Point(438, 185);
-            this.comboBox2.Name = "comboBox2";
-            this.comboBox2.Size = new System.Drawing.Size(222, 25);
-            this.comboBox2.TabIndex = 4;
-            // 
-            // button4
-            // 
-            this.button4.BackColor = System.Drawing.Color.DarkViolet;
-            this.button4.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.button4.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.button4.FlatAppearance.BorderColor = System.Drawing.Color.White;
-            this.button4.FlatAppearance.BorderSize = 10;
-            this.button4.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.button4.Font = new System.Drawing.Font("Cambria", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.button4.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.button4.Location = new System.Drawing.Point(666, 175);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(121, 46);
-            this.button4.TabIndex = 5;
-            this.button4.Text = "Скачать";
-            this.button4.UseVisualStyleBackColor = false;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
-            // 
-            // button5
-            // 
-            this.button5.BackColor = System.Drawing.Color.DarkViolet;
-            this.button5.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.button5.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.button5.Font = new System.Drawing.Font("Cambria", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.button5.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.button5.Location = new System.Drawing.Point(608, 54);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(140, 70);
-            this.button5.TabIndex = 6;
-            this.button5.Text = "Загрузить протокол";
-            this.button5.UseVisualStyleBackColor = false;
-            this.button5.Click += new System.EventHandler(this.button5_Click);
-            // 
-            // openFileDialog1
-            // 
-            this.openFileDialog1.FileName = "openFileDialog1";
-            // 
-            // label1
-            // 
-            this.label1.Font = new System.Drawing.Font("Cambria", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label1.Location = new System.Drawing.Point(63, 54);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(423, 31);
-            this.label1.TabIndex = 7;
-            this.label1.Text = "Всероссийская олимпиада школьников";
-            // 
-            // label2
-            // 
-            this.label2.Font = new System.Drawing.Font("Cambria", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label2.Location = new System.Drawing.Point(62, 85);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(252, 39);
-            this.label2.TabIndex = 8;
-            this.label2.Text = "ШКОЛЬНЫЙ ЭТАП";
-            // 
-            // label3
-            // 
-            this.label3.Font = new System.Drawing.Font("Cambria", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label3.Location = new System.Drawing.Point(64, 162);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(154, 23);
-            this.label3.TabIndex = 9;
-            this.label3.Text = "Проходные баллы";
-            // 
-            // label4
-            // 
-            this.label4.Font = new System.Drawing.Font("Cambria", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label4.Location = new System.Drawing.Point(434, 162);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(226, 23);
-            this.label4.TabIndex = 10;
-            this.label4.Text = "Статистика школьного этапа";
-            // 
-            // Form3
-            // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.ClientSize = new System.Drawing.Size(827, 326);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.button5);
-            this.Controls.Add(this.button4);
-            this.Controls.Add(this.comboBox2);
-            this.Controls.Add(this.button3);
-            this.Controls.Add(this.comboBox1);
-            this.Name = "MainWindow";
-            this.Text = "Form3";
-            this.ResumeLayout(false);
+		/// <summary>
+		/// Required method for Designer support - do not modify
+		/// the contents of this method with the code editor.
+		/// </summary>
+		private void InitializeComponent()
+		{
+			comboBox1 = new System.Windows.Forms.ComboBox();
+			button3 = new System.Windows.Forms.Button();
+			comboBox2 = new System.Windows.Forms.ComboBox();
+			button4 = new System.Windows.Forms.Button();
+			downloadProtocolButton = new System.Windows.Forms.Button();
+			openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+			saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+			label1 = new System.Windows.Forms.Label();
+			label2 = new System.Windows.Forms.Label();
+			label3 = new System.Windows.Forms.Label();
+			label4 = new System.Windows.Forms.Label();
+			SuspendLayout();
+			// 
+			// comboBox1
+			// 
+			comboBox1.BackColor = System.Drawing.SystemColors.InactiveBorder;
+			comboBox1.Font = new System.Drawing.Font("Cambria", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 204);
+			comboBox1.FormattingEnabled = true;
+			comboBox1.Items.AddRange(new object[] { "искусство", "астрономия", "биология", "химия", "китайский язык", "информатика", "экология", "экономика", "английский язык", "французкий язык", "основы безопасности и  зашиты родины", "география", "немецкий язык", "история", "право", "литература", "математика", "физическая культура", "физика", "русский язык", "обществознание", "труды" });
+			comboBox1.Location = new System.Drawing.Point(91, 289);
+			comboBox1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+			comboBox1.Name = "comboBox1";
+			comboBox1.Size = new System.Drawing.Size(295, 30);
+			comboBox1.TabIndex = 2;
+			// 
+			// button3
+			// 
+			button3.BackColor = System.Drawing.Color.DarkViolet;
+			button3.Cursor = System.Windows.Forms.Cursors.Hand;
+			button3.FlatAppearance.BorderColor = System.Drawing.Color.Cyan;
+			button3.FlatAppearance.BorderSize = 100;
+			button3.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Cyan;
+			button3.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Cyan;
+			button3.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+			button3.Font = new System.Drawing.Font("Cambria", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 204);
+			button3.ForeColor = System.Drawing.SystemColors.ButtonFace;
+			button3.Location = new System.Drawing.Point(395, 269);
+			button3.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+			button3.Name = "button3";
+			button3.Size = new System.Drawing.Size(161, 69);
+			button3.TabIndex = 3;
+			button3.Text = "Скачать";
+			button3.UseVisualStyleBackColor = true;
+			button3.Click += button3_ClickAsync;
+			// 
+			// comboBox2
+			// 
+			comboBox2.BackColor = System.Drawing.SystemColors.InactiveBorder;
+			comboBox2.Font = new System.Drawing.Font("Cambria", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 204);
+			comboBox2.FormattingEnabled = true;
+			comboBox2.Items.AddRange(new object[] { "Общий отчёт", "По классам и предметам", "За более старший класс" });
+			comboBox2.Location = new System.Drawing.Point(584, 285);
+			comboBox2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+			comboBox2.Name = "comboBox2";
+			comboBox2.Size = new System.Drawing.Size(295, 30);
+			comboBox2.TabIndex = 4;
+			// 
+			// button4
+			// 
+			button4.BackColor = System.Drawing.Color.DarkViolet;
+			button4.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+			button4.Cursor = System.Windows.Forms.Cursors.Hand;
+			button4.FlatAppearance.BorderColor = System.Drawing.Color.White;
+			button4.FlatAppearance.BorderSize = 10;
+			button4.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+			button4.Font = new System.Drawing.Font("Cambria", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 204);
+			button4.ForeColor = System.Drawing.SystemColors.ButtonFace;
+			button4.Location = new System.Drawing.Point(888, 269);
+			button4.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+			button4.Name = "button4";
+			button4.Size = new System.Drawing.Size(161, 71);
+			button4.TabIndex = 5;
+			button4.Text = "Скачать";
+			button4.UseVisualStyleBackColor = false;
+			button4.Click += button4_ClickAsync;
+			// 
+			// downloadProtocolButton
+			// 
+			downloadProtocolButton.BackColor = System.Drawing.Color.DarkViolet;
+			downloadProtocolButton.Cursor = System.Windows.Forms.Cursors.Hand;
+			downloadProtocolButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+			downloadProtocolButton.Font = new System.Drawing.Font("Cambria", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 204);
+			downloadProtocolButton.ForeColor = System.Drawing.SystemColors.ButtonFace;
+			downloadProtocolButton.Location = new System.Drawing.Point(811, 83);
+			downloadProtocolButton.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+			downloadProtocolButton.Name = "downloadProtocolButton";
+			downloadProtocolButton.Size = new System.Drawing.Size(187, 108);
+			downloadProtocolButton.TabIndex = 6;
+			downloadProtocolButton.Text = "Загрузить протокол";
+			downloadProtocolButton.UseVisualStyleBackColor = false;
+			downloadProtocolButton.Click += downloadProtocolButton_ClickAsync;
+			// 
+			// openFileDialog1
+			// 
+			openFileDialog1.FileName = "openFileDialog1";
+			// 
+			// label1
+			// 
+			label1.Font = new System.Drawing.Font("Cambria", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 204);
+			label1.Location = new System.Drawing.Point(84, 83);
+			label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			label1.Name = "label1";
+			label1.Size = new System.Drawing.Size(564, 48);
+			label1.TabIndex = 7;
+			label1.Text = "Всероссийская олимпиада школьников";
+			// 
+			// label2
+			// 
+			label2.Font = new System.Drawing.Font("Cambria", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 204);
+			label2.Location = new System.Drawing.Point(83, 131);
+			label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			label2.Name = "label2";
+			label2.Size = new System.Drawing.Size(336, 60);
+			label2.TabIndex = 8;
+			label2.Text = "ШКОЛЬНЫЙ ЭТАП";
+			// 
+			// label3
+			// 
+			label3.Font = new System.Drawing.Font("Cambria", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 204);
+			label3.Location = new System.Drawing.Point(85, 249);
+			label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			label3.Name = "label3";
+			label3.Size = new System.Drawing.Size(205, 35);
+			label3.TabIndex = 9;
+			label3.Text = "Проходные баллы";
+			// 
+			// label4
+			// 
+			label4.Font = new System.Drawing.Font("Cambria", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 204);
+			label4.Location = new System.Drawing.Point(579, 249);
+			label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			label4.Name = "label4";
+			label4.Size = new System.Drawing.Size(301, 35);
+			label4.TabIndex = 10;
+			label4.Text = "Статистика школьного этапа";
+			// 
+			// MainWindow
+			// 
+			AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
+			AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			BackColor = System.Drawing.SystemColors.ButtonFace;
+			ClientSize = new System.Drawing.Size(1103, 502);
+			Controls.Add(label4);
+			Controls.Add(label3);
+			Controls.Add(label2);
+			Controls.Add(label1);
+			Controls.Add(downloadProtocolButton);
+			Controls.Add(button4);
+			Controls.Add(comboBox2);
+			Controls.Add(button3);
+			Controls.Add(comboBox1);
+			Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+			Name = "MainWindow";
+			Text = "Form3";
+			ResumeLayout(false);
+		}
 
-        }
-
-        #endregion
-        private System.Windows.Forms.ComboBox comboBox1;
+		#endregion
+		private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.ComboBox comboBox2;
         private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.Button downloadProtocolButton;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.Label label1;

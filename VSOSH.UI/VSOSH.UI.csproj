@@ -7,4 +7,7 @@
       <UseWindowsForms>true</UseWindowsForms>
       <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
   </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VSOSH.HttpClient\VSOSH.HttpClient.csproj" />
+  </ItemGroup>
 </Project>
