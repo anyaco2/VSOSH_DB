@@ -28,6 +28,24 @@ public interface IResultRepository
         CancellationToken cancellationToken = default) where T : SchoolOlympiadResultBase;
 
     /// <summary>
+    /// Возвращает 
+    /// </summary>
+    /// <param name="cancellationToken"><see cref="CancellationToken" />.</param>
+    /// <returns></returns>
+    Task<IReadOnlyCollection<IGrouping<int, T>>> FindWithGroupByGradeCompeting<T>(CancellationToken cancellationToken = default)
+        where T : SchoolOlympiadResultBase;
+
+    /// <summary>
+    /// Возвращает коллекцию результатов отсортировав по баллам.
+    /// </summary>
+    /// <param name="cancellationToken"><see cref="CancellationToken" />.</param>
+    /// <typeparam name="T"><see cref="SchoolOlympiadResultBase" />.</typeparam>
+    /// <returns>Коллекция результатов.</returns>
+    Task<IReadOnlyCollection<T>?> FindAndOrderByPassingPointsAsync<T>(CancellationToken cancellationToken = default)
+        where T : SchoolOlympiadResultBase;
+
+
+    /// <summary>
     /// Возвращает общий отчет.
     /// </summary>
     /// <param name="cancellationToken"><see cref="CancellationToken" />.</param>

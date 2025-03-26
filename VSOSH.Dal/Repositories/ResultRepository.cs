@@ -32,26 +32,48 @@ public class ResultRepository(ApplicationDbContext dbContext) : IResultRepositor
         if (findExpression is null)
         {
             return await _dbContext
-                .SchoolOlympiadResultBases
-                .AsNoTrackingWithIdentityResolution()
-                .OfType<T>()
-                .OrderBy(r => r.GradeCompeting)
-                .ToListAsync(cancellationToken);
+                         .SchoolOlympiadResultBases
+                         .AsNoTrackingWithIdentityResolution()
+                         .OfType<T>()
+                         .OrderBy(r => r.GradeCompeting)
+                         .ToListAsync(cancellationToken);
         }
 
         return await _dbContext
-            .SchoolOlympiadResultBases
-            .AsNoTrackingWithIdentityResolution()
-            .OfType<T>()
-            .Where(findExpression)
-            .OrderBy(r => r.GradeCompeting)
-            .ToListAsync(cancellationToken);
+                     .SchoolOlympiadResultBases
+                     .AsNoTrackingWithIdentityResolution()
+                     .OfType<T>()
+                     .Where(findExpression)
+                     .OrderBy(r => r.GradeCompeting)
+                     .ToListAsync(cancellationToken);
+    }
+
+    public async Task<IReadOnlyCollection<IGrouping<int, T>>> FindWithGroupByGradeCompeting<T>(
+        CancellationToken cancellationToken = default)
+        where T : SchoolOlympiadResultBase
+    {
+        return await _dbContext.SchoolOlympiadResultBases.AsNoTrackingWithIdentityResolution().OfType<T>()
+                               .OrderBy(r => r.GradeCompeting)
+                               .GroupBy(s => s.GradeCompeting)
+                               .ToListAsync(cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public async Task<IReadOnlyCollection<T>?> FindAndOrderByPassingPointsAsync<T>(
+        CancellationToken cancellationToken = default) where T : SchoolOlympiadResultBase
+    {
+        return await _dbContext
+                     .SchoolOlympiadResultBases
+                     .AsNoTrackingWithIdentityResolution()
+                     .OfType<T>()
+                     .OrderByDescending(r => r.FinalScore)
+                     .ToListAsync(cancellationToken);
     }
 
     /// <inheritdoc />
     public async Task<GeneralReport?> GetGeneralReport(CancellationToken cancellationToken = default)
     {
         return await _dbContext.Set<GeneralReport>()
-            .FirstOrDefaultAsync(cancellationToken);
+                               .FirstOrDefaultAsync(cancellationToken);
     }
 }

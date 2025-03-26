@@ -51,11 +51,18 @@ public static class ParseSchoolOlympiadResultApi
             return TypedResults.BadRequest("Неверный формат файла. Загрузите Excel файл.");
         }
 
-        using var stream = new MemoryStream();
-        await file.CopyToAsync(stream, cancellationToken);
-        await parser.ParseAndSaveAsync(stream, cancellationToken);
+        await using var stream = file.OpenReadStream();
+        try
+        {
+            await parser.ParseAndSaveAsync(stream, cancellationToken);
+
+            return TypedResults.Ok();
+        }
+        catch (Exception ex)
+        {
+            return TypedResults.StatusCode(500);
+        }
         // TODO: Добавить middleware по обработке ошибок.
 
-        return TypedResults.Ok();
     }
 }

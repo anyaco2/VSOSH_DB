@@ -1,5 +1,5 @@
 ﻿using System.Globalization;
-using ClosedXML.Excel;
+using OfficeOpenXml;
 using Microsoft.Extensions.Logging;
 using VSOSH.Domain;
 using VSOSH.Domain.Entities;
@@ -23,6 +23,7 @@ public class ResultParser : IParser
     {
         _resultRepository = resultRepository ?? throw new ArgumentNullException(nameof(resultRepository));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
     }
 
     #endregion
@@ -32,27 +33,41 @@ public class ResultParser : IParser
     /// <inheritdoc />
     public async Task ParseAndSaveAsync(Stream file, CancellationToken cancellationToken = default)
     {
-        file.Position = 0;
-        var worksheets = new XLWorkbook(file).Worksheets.ToList().Skip(1);
+        List<ExcelWorksheet> worksheets = [];
+        using var package = new ExcelPackage(file);
+        try
+        {
+            worksheets = package.Workbook.Worksheets.ToList();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"{ex.Message} {ex.InnerException?.Message}");
+        }
+        
         foreach (var worksheet in worksheets)
         {
+            if (worksheet.Name == "Инструкция" || worksheet.Name == "Правила")
+            {
+                continue;
+            }
             _logger.LogInformation($"Начало обработки парсинга данных со страницы {worksheet.Name}");
-            var row = ExcelResultInfo.StartRow.StartRow;
-            var nameSubject = worksheet.Cell(row, ExcelResultInfo.ColumnWithNameOfSchoolSubject).GetString();
+            
+            int row = ExcelResultInfo.StartRow.StartRow;
+            var nameSubject = worksheet.Cells[row, ExcelResultInfo.ColumnWithNameOfSchoolSubject].GetValue<string>();
+            
             List<SchoolOlympiadResultBase> olympiadResultBases = [];
+            
             if (nameSubject.ToLower() == "предмет")
             {
                 row = ExcelResultInfo.StartRow.PeStartRow;
-                nameSubject = worksheet.Cell(row, ExcelResultInfo.ColumnWithNameOfSchoolSubject).GetString();
+                nameSubject = worksheet.Cells[row, ExcelResultInfo.ColumnWithNameOfSchoolSubject].GetValue<string>();
             }
 
-            while (!string.IsNullOrWhiteSpace(worksheet.Cell(row, ExcelResultInfo.ColumnWithStudentFirstName)
-                       .GetString()))
+            while (!string.IsNullOrWhiteSpace(worksheet.Cells[row, ExcelResultInfo.ColumnWithStudentFirstName].GetValue<string>()))
             {
                 try
                 {
-                    var excelRow = worksheet.Row(row);
-                    olympiadResultBases.Add(CreateOlympiadResult(nameSubject.ToLower(), excelRow));
+                    olympiadResultBases.Add(CreateOlympiadResult(nameSubject.ToLower(), worksheet, row));
                     row++;
                 }
                 catch (Exception ex)
@@ -91,12 +106,12 @@ public class ResultParser : IParser
 
     #region Private
 
-    private SchoolOlympiadResultBase CreateOlympiadResult(string nameSubject, IXLRow row)
+    private SchoolOlympiadResultBase CreateOlympiadResult(string nameSubject, ExcelWorksheet worksheet, int row)
     {
         ResultBase result = null;
         if (nameSubject != "труды" && nameSubject != "физическая культура")
         {
-            result = CreateResultBase(row);
+            result = CreateResultBase(worksheet, row);
         }
 
         return nameSubject switch
@@ -115,8 +130,8 @@ public class ResultParser : IParser
             "основы безопасности и защиты родины" => new FundamentalsLifeSafetyResult(result!.Id, result.School,
                 result.ParticipantCode, result.StudentName, result.Status, result.Percentage, result.FinalScore,
                 result.GradeCompeting, result.CurrentCompeting),
-            "труды" => CreateTechnologyResult(row),
-            "физическая культура" => CreatePhysicalEducationResult(row),
+            "труды" => CreateTechnologyResult(worksheet, row),
+            "физическая культура" => CreatePhysicalEducationResult(worksheet, row),
             "китайский язык" => new ChineseResult(result!.Id, result.School, result.ParticipantCode, result.StudentName,
                 result.Status, result.Percentage, result.FinalScore, result.GradeCompeting, result.CurrentCompeting),
             "немецкий язык" => new GermanResult(result!.Id, result.School, result.ParticipantCode, result.StudentName,
@@ -152,13 +167,13 @@ public class ResultParser : IParser
         };
     }
 
-    private ResultBase CreateResultBase(IXLRow row)
+    private ResultBase CreateResultBase(ExcelWorksheet worksheet, int row)
     {
-        var school = row.Cell(ExcelResultInfo.ColumnWithSchoolName).GetString();
-        var participantCode = row.Cell(ExcelResultInfo.ColumnWithParticipantCode).GetString();
-        var lastName = row.Cell(ExcelResultInfo.ColumnWithStudentLastName).GetString();
-        var firstName = row.Cell(ExcelResultInfo.ColumnWithStudentFirstName).GetString();
-        var middleName = row.Cell(ExcelResultInfo.ColumnWithStudentMiddleName).GetString();
+        var school = worksheet.Cells[row, ExcelResultInfo.ColumnWithSchoolName].GetValue<string>();
+        var participantCode = worksheet.Cells[row, ExcelResultInfo.ColumnWithParticipantCode].GetValue<string>();
+        var lastName = worksheet.Cells[row, ExcelResultInfo.ColumnWithStudentLastName].GetValue<string>();
+        var firstName = worksheet.Cells[row, ExcelResultInfo.ColumnWithStudentFirstName].GetValue<string>();
+        var middleName = worksheet.Cells[row, ExcelResultInfo.ColumnWithStudentMiddleName].GetValue<string>();
         var student = new StudentName()
         {
             FirstName = firstName,
@@ -166,64 +181,64 @@ public class ResultParser : IParser
             MiddleName = middleName
         };
         var gradeCompeting =
-            int.Parse(row.Cell(ExcelResultInfo.ColumnWithGradeCompeting.BaseGradeCompeting).GetString());
+            int.Parse(worksheet.Cells[row, ExcelResultInfo.ColumnWithGradeCompeting.BaseGradeCompeting].GetValue<string>());
         var currentGradeInString =
-            row.Cell(ExcelResultInfo.ColumnWithCurrentCompeting.BaseCurrentCompeting).GetString();
+            worksheet.Cells[row, ExcelResultInfo.ColumnWithCurrentCompeting.BaseCurrentCompeting].GetValue<string>();
         int? currentGrade = string.IsNullOrWhiteSpace(currentGradeInString) ? null : int.Parse(currentGradeInString);
-        var finalScore = double.Parse(row.Cell(ExcelResultInfo.ColumnWithFinalScore.BaseFinalScore).GetString(),
+        var finalScore = double.Parse(worksheet.Cells[row, ExcelResultInfo.ColumnWithFinalScore.BaseFinalScore].GetValue<string>(),
             CultureInfo.CurrentCulture);
         var percentageInDouble =
-            double.Parse(row.Cell(ExcelResultInfo.ColumnWithPercentage.BasePercentage).GetString(),
+            double.Parse(worksheet.Cells[row, ExcelResultInfo.ColumnWithPercentage.BasePercentage].GetValue<string>(),
                 CultureInfo.CurrentCulture);
         var percentage = int.Parse($"{Math.Round(percentageInDouble * 100)}");
-        var status = GetStatus(row.Cell(ExcelResultInfo.ColumnWithStatus.BaseStatus).GetString());
+        var status = GetStatus(worksheet.Cells[row, ExcelResultInfo.ColumnWithStatus.BaseStatus].GetValue<string>());
         return new ResultBase(Guid.NewGuid(), school, participantCode, student, status, percentage,
             finalScore, gradeCompeting, currentGrade);
     }
 
-    private PhysicalEducationResult CreatePhysicalEducationResult(IXLRow row)
+    private PhysicalEducationResult CreatePhysicalEducationResult(ExcelWorksheet worksheet, int row)
     {
-        var school = row.Cell(ExcelResultInfo.ColumnWithSchoolName).GetString();
-        var participantCode = row.Cell(ExcelResultInfo.ColumnWithParticipantCode).GetString();
-        var lastName = row.Cell(ExcelResultInfo.ColumnWithStudentLastName).GetString();
-        var firstName = row.Cell(ExcelResultInfo.ColumnWithStudentFirstName).GetString();
-        var middleName = row.Cell(ExcelResultInfo.ColumnWithStudentMiddleName).GetString();
+        var school = worksheet.Cells[row, ExcelResultInfo.ColumnWithSchoolName].GetValue<string>();
+        var participantCode = worksheet.Cells[row, ExcelResultInfo.ColumnWithParticipantCode].GetValue<string>();
+        var lastName = worksheet.Cells[row, ExcelResultInfo.ColumnWithStudentLastName].GetValue<string>();
+        var firstName = worksheet.Cells[row, ExcelResultInfo.ColumnWithStudentFirstName].GetValue<string>();
+        var middleName = worksheet.Cells[row, ExcelResultInfo.ColumnWithStudentMiddleName].GetValue<string>();
         var student = new StudentName()
         {
             FirstName = firstName,
             LastName = lastName,
             MiddleName = middleName
         };
-        var gradeCompeting = int.Parse(row.Cell(ExcelResultInfo.ColumnWithGradeCompeting.PEGradeCompeting).GetString());
-        var currentGradeInString = row.Cell(ExcelResultInfo.ColumnWithCurrentCompeting.PECurrentCompeting).GetString();
+        var gradeCompeting = int.Parse(worksheet.Cells[row, ExcelResultInfo.ColumnWithGradeCompeting.PEGradeCompeting].GetValue<string>());
+        var currentGradeInString = worksheet.Cells[row, ExcelResultInfo.ColumnWithCurrentCompeting.PECurrentCompeting].GetValue<string>();
         int? currentGrade = string.IsNullOrWhiteSpace(currentGradeInString) ? null : int.Parse(currentGradeInString);
-        var finalScore = double.Parse(row.Cell(ExcelResultInfo.ColumnWithFinalScore.PEFinalScore).GetString(),
+        var finalScore = double.Parse(worksheet.Cells[row, ExcelResultInfo.ColumnWithFinalScore.PEFinalScore].GetValue<string>(),
             CultureInfo.CurrentCulture);
         var percentageInDouble =
-            double.Parse(row.Cell(ExcelResultInfo.ColumnWithPercentage.PEPercentage).GetString(),
+            double.Parse(worksheet.Cells[row, ExcelResultInfo.ColumnWithPercentage.PEPercentage].GetValue<string>(),
                 CultureInfo.CurrentCulture);
         var percentage = int.Parse($"{Math.Round(percentageInDouble * 100)}");
-        var status = GetStatus(row.Cell(ExcelResultInfo.ColumnWithStatus.PEStatus).GetString());
-        var preTheory = double.Parse(row.Cell(ExcelResultInfo.ColumnWithPreliminaryScoreInTheory).GetString(),
+        var status = GetStatus(worksheet.Cells[row, ExcelResultInfo.ColumnWithStatus.PEStatus].GetValue<string>());
+        var preTheory = double.Parse(worksheet.Cells[row, ExcelResultInfo.ColumnWithPreliminaryScoreInTheory].GetValue<string>(),
             CultureInfo.CurrentCulture);
-        var finalTheory = double.Parse(row.Cell(ExcelResultInfo.ColumnWithFinalScoreInTheory).GetString(),
+        var finalTheory = double.Parse(worksheet.Cells[row, ExcelResultInfo.ColumnWithFinalScoreInTheory].GetValue<string>(),
             CultureInfo.CurrentCulture);
-        var prePractice = double.Parse(row.Cell(ExcelResultInfo.ColumnWithPreliminaryScoreInPractice).GetString(),
+        var prePractice = double.Parse(worksheet.Cells[row, ExcelResultInfo.ColumnWithPreliminaryScoreInPractice].GetValue<string>(),
             CultureInfo.CurrentCulture);
-        var finalPractice = double.Parse(row.Cell(ExcelResultInfo.ColumnWithFinalScoreInPractice).GetString(),
+        var finalPractice = double.Parse(worksheet.Cells[row, ExcelResultInfo.ColumnWithFinalScoreInPractice].GetValue<string>(),
             CultureInfo.CurrentCulture);
-        var sex = GetSex(row.Cell(ExcelResultInfo.ColumnWithSexStudent).GetString());
+        var sex = GetSex(worksheet.Cells[row, ExcelResultInfo.ColumnWithSexStudent].GetValue<string>());
         return new PhysicalEducationResult(Guid.NewGuid(), school, participantCode, student, status, percentage,
             finalScore, gradeCompeting, currentGrade, preTheory, finalTheory, prePractice, finalPractice, sex);
     }
 
-    private TechnologyResult CreateTechnologyResult(IXLRow row)
+    private TechnologyResult CreateTechnologyResult(ExcelWorksheet worksheet, int row)
     {
-        var school = row.Cell(ExcelResultInfo.ColumnWithSchoolName).GetString();
-        var participantCode = row.Cell(ExcelResultInfo.ColumnWithParticipantCode).GetString();
-        var lastName = row.Cell(ExcelResultInfo.ColumnWithStudentLastName).GetString();
-        var firstName = row.Cell(ExcelResultInfo.ColumnWithStudentFirstName).GetString();
-        var middleName = row.Cell(ExcelResultInfo.ColumnWithStudentMiddleName).GetString();
+        var school = worksheet.Cells[row, ExcelResultInfo.ColumnWithSchoolName].GetValue<string>();
+        var participantCode = worksheet.Cells[row, ExcelResultInfo.ColumnWithParticipantCode].GetValue<string>();
+        var lastName = worksheet.Cells[row, ExcelResultInfo.ColumnWithStudentLastName].GetValue<string>();
+        var firstName = worksheet.Cells[row, ExcelResultInfo.ColumnWithStudentFirstName].GetValue<string>();
+        var middleName = worksheet.Cells[row, ExcelResultInfo.ColumnWithStudentMiddleName].GetValue<string>();
         var student = new StudentName()
         {
             FirstName = firstName,
@@ -231,18 +246,18 @@ public class ResultParser : IParser
             MiddleName = middleName
         };
         var gradeCompeting =
-            int.Parse(row.Cell(ExcelResultInfo.ColumnWithGradeCompeting.BaseGradeCompeting).GetString());
+            int.Parse(worksheet.Cells[row, ExcelResultInfo.ColumnWithGradeCompeting.BaseGradeCompeting].GetValue<string>());
         var currentGradeInString =
-            row.Cell(ExcelResultInfo.ColumnWithCurrentCompeting.BaseCurrentCompeting).GetString();
+            worksheet.Cells[row, ExcelResultInfo.ColumnWithCurrentCompeting.BaseCurrentCompeting].GetValue<string>();
         int? currentGrade = string.IsNullOrWhiteSpace(currentGradeInString) ? null : int.Parse(currentGradeInString);
-        var finalScore = double.Parse(row.Cell(ExcelResultInfo.ColumnWithFinalScore.TechnologyFinalScore).GetString(),
+        var finalScore = double.Parse(worksheet.Cells[row, ExcelResultInfo.ColumnWithFinalScore.TechnologyFinalScore].GetValue<string>(),
             CultureInfo.CurrentCulture);
         var percentageInDouble =
-            double.Parse(row.Cell(ExcelResultInfo.ColumnWithPercentage.TechnologyPercentage).GetString(),
+            double.Parse(worksheet.Cells[row, ExcelResultInfo.ColumnWithPercentage.TechnologyPercentage].GetValue<string>(),
                 CultureInfo.CurrentCulture);
         var percentage = int.Parse($"{Math.Round(percentageInDouble * 100)}");
-        var status = GetStatus(row.Cell(ExcelResultInfo.ColumnWithStatus.TechnologyStatus).GetString());
-        var directionPractise = row.Cell(ExcelResultInfo.ColumnWithDirectionPractice).GetString();
+        var status = GetStatus(worksheet.Cells[row, ExcelResultInfo.ColumnWithStatus.TechnologyStatus].GetValue<string>());
+        var directionPractise = worksheet.Cells[row, ExcelResultInfo.ColumnWithDirectionPractice].GetValue<string>();
         return new TechnologyResult(Guid.NewGuid(), school, participantCode, student, status, percentage,
             finalScore, gradeCompeting, currentGrade, directionPractise);
     }

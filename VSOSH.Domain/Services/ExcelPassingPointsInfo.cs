@@ -1,52 +1,52 @@
 ﻿namespace VSOSH.Domain.Services;
 
 /// <summary>
-/// Представляет информацию об Excel-файле проходных баллов.
+/// Представляет информацию об Excel-файле проходных баллов для EPPlus.
 /// </summary>
 public static class ExcelPassingPointsInfo
 {
     /// <summary>
-    /// Возвращает название столбца с наименованием школы.
+    /// Возвращает номер столбца с наименованием школы.
     /// </summary>
-    public const string ColumnWithSchoolName = "A";
+    public const int ColumnWithSchoolName = 1; // A
 
     /// <summary>
-    /// Возвращает название столбца с фамилией ученика.
+    /// Возвращает номер столбца с фамилией ученика.
     /// </summary>
-    public const string ColumnWithLastName = "B";
+    public const int ColumnWithLastName = 2; // B
 
     /// <summary>
-    /// Возвращает название столбца именем ученика.
+    /// Возвращает номер столбца с именем ученика.
     /// </summary>
-    public const string ColumnWithFirstName = "C";
+    public const int ColumnWithFirstName = 3; // C
 
     /// <summary>
-    /// Возвращает название столбца с полом ученика.
+    /// Возвращает номер столбца с полом ученика.
     /// </summary>
-    public const string ColumnWithSex = "D";
+    public const int ColumnWithSex = 4; // D
 
     /// <summary>
-    /// Возвращает название столбца с направлением практики.
+    /// Возвращает номер столбца с направлением практики.
     /// </summary>
-    public const string ColumnWithPractice = "E";
+    public const int ColumnWithPractice = 5; // E
 
     /// <summary>
-    /// Возвращает название столбца клалса, за который выступает ученик.
+    /// Возвращает номера столбцов с классом, за который выступает ученик.
     /// </summary>
-    public static readonly (string Base, string Pe) ColumnWithGradeCompeting = ("D", "E");
+    public static readonly (int Base, int Pe) ColumnWithGradeCompeting = (4, 5); // D для базового, E для физры
 
     /// <summary>
-    /// Возвращает название столбца процентным выполнением.
+    /// Возвращает номера столбцов с процентным выполнением.
     /// </summary>
-    public static readonly (string Base, string TechnologyOrPe) ColumnWithPercentage = ("E", "F");
+    public static readonly (int Base, int TechnologyOrPe) ColumnWithPercentage = (5, 6); // E/F
 
     /// <summary>
-    /// Возвращает название столбца с итоговыми баллами.
+    /// Возвращает номера столбцов с итоговыми баллами.
     /// </summary>
-    public static readonly (string Base, string TechnologyOrPe) ColumnWithFinalScore = ("F", "G");
+    public static readonly (int Base, int TechnologyOrPe) ColumnWithFinalScore = (6, 7); // F/G
 
     /// <summary>
-    /// Возвращает название столбца со статусом.
+    /// Возвращает номера столбцов со статусом.
     /// </summary>
-    public static readonly (string Base, string TechnologyOrPe) ColumnWithStatus = ("G", "H");
+    public static readonly (int Base, int TechnologyOrPe) ColumnWithStatus = (7, 8); // G/H
 }

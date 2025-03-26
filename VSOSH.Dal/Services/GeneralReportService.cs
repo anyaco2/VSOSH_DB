@@ -1,4 +1,4 @@
-﻿using ClosedXML.Excel;
+﻿using OfficeOpenXml;
 using Microsoft.Extensions.Logging;
 using VSOSH.Contracts;
 using VSOSH.Contracts.Exceptions;
@@ -12,21 +12,17 @@ public class GeneralReportService : IGeneralReportService
     private readonly ILogger<GeneralReportService> _logger;
     private readonly IResultRepository _resultRepository;
 
-    /// <summary>
-    /// Инициализирует новый экземпляр класса <see cref="GeneralReportService" />.
-    /// </summary>
-    /// <param name="resultRepository"><see cref="IResultRepository" />.</param>
-    /// <param name="logger"><see cref="ILogger{GeneralReportService}" />.</param>
-    /// <exception cref="ArgumentNullException">Если хотя бы один из аргументов не задан.</exception>
     public GeneralReportService(IResultRepository resultRepository, ILogger<GeneralReportService> logger)
     {
         _resultRepository = resultRepository ?? throw new ArgumentNullException(nameof(resultRepository));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
     }
 
     public async Task<FileStream> GetGeneralReport(CancellationToken cancellationToken = default)
     {
         var pathToFile = Path.Combine(ProfileLocationStorage.ServiceFiles, $"Общий_отчет.xlsx");
+        
         if (File.Exists(pathToFile))
         {
             File.Delete(pathToFile);
@@ -39,27 +35,35 @@ public class GeneralReportService : IGeneralReportService
             throw new NotFoundException("Нет данных для отчета.");
         }
 
-        var workbook = new XLWorkbook();
-        workbook.Worksheets.Add("Отчет");
-        var worksheet = workbook.Worksheets.Worksheet("Отчет");
-        var row = worksheet.Row(1);
-        row.Cell("A").Value = "Кол-во уникальных участников";
-        row.Cell("B").Value = "Кол-во фактов участия";
-        row.Cell("C").Value = "Кол-во уникальных победителей";
-        row.Cell("D").Value = "Кол-во дипломов победителей";
-        row.Cell("E").Value = "Кол-во уникальных призёров";
-        row.Cell("F").Value = "Кол-во дипломов в призёров";
-        row.Cell("G").Value = "Кол-во уникальных победителей и призёров";
-        row = worksheet.Row(2);
-        row.Cell("A").Value = generalReport.UniqueParticipants;
-        row.Cell("B").Value = generalReport.TotalCount;
-        row.Cell("C").Value = generalReport.UniqueWinners;
-        row.Cell("D").Value = generalReport.TotalWinnerDiplomas;
-        row.Cell("E").Value = generalReport.UniquePrizeWinners;
-        row.Cell("F").Value = generalReport.TotalPrizeDiplomas;
-        row.Cell("G").Value = generalReport.UniqueWinnersAndPrizeWinners;
-        var stream = new FileStream(pathToFile, FileMode.OpenOrCreate);
-        workbook.SaveAs(stream);
-        return stream;
+        // Создаем Excel-файл с помощью EPPlus
+        using (var excelPackage = new ExcelPackage())
+        {
+            var worksheet = excelPackage.Workbook.Worksheets.Add("Отчет");
+
+            // Заголовки
+            worksheet.Cells["A1"].Value = "Кол-во уникальных участников";
+            worksheet.Cells["B1"].Value = "Кол-во фактов участия";
+            worksheet.Cells["C1"].Value = "Кол-во уникальных победителей";
+            worksheet.Cells["D1"].Value = "Кол-во дипломов победителей";
+            worksheet.Cells["E1"].Value = "Кол-во уникальных призёров";
+            worksheet.Cells["F1"].Value = "Кол-во дипломов в призёров";
+            worksheet.Cells["G1"].Value = "Кол-во уникальных победителей и призёров";
+
+            // Данные
+            worksheet.Cells["A2"].Value = generalReport.UniqueParticipants;
+            worksheet.Cells["B2"].Value = generalReport.TotalCount;
+            worksheet.Cells["C2"].Value = generalReport.UniqueWinners;
+            worksheet.Cells["D2"].Value = generalReport.TotalWinnerDiplomas;
+            worksheet.Cells["E2"].Value = generalReport.UniquePrizeWinners;
+            worksheet.Cells["F2"].Value = generalReport.TotalPrizeDiplomas;
+            worksheet.Cells["G2"].Value = generalReport.UniqueWinnersAndPrizeWinners;
+
+            // Сохраняем в файл
+            var fileInfo = new FileInfo(pathToFile);
+            await excelPackage.SaveAsAsync(fileInfo, cancellationToken);
+        }
+
+        // Возвращаем поток с файлом
+        return new FileStream(pathToFile, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Read);
     }
 }

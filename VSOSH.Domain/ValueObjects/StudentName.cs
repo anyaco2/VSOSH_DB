@@ -20,10 +20,10 @@ public class StudentName : ValueObject
     /// <summary>
     /// Возвращает отчество ученика.
     /// </summary>
-    public required string MiddleName { get; init; }
+    public string? MiddleName { get; init; }
     
     /// <inheritdoc />
-    protected override IEnumerable<object> GetEqualityComponents()
+    protected override IEnumerable<object?> GetEqualityComponents()
     {
         yield return FirstName;
         yield return LastName;

@@ -6,96 +6,96 @@
 public static class ExcelResultInfo
 {
     /// <summary>
-    /// Возвращает название столбца с названием предмета по олимпиаде.
+    /// Возвращает номер столбца с названием предмета по олимпиаде.
     /// </summary>
-    public const string ColumnWithNameOfSchoolSubject = "A";
+    public const int ColumnWithNameOfSchoolSubject = 1; // A
 
     /// <summary>
-    /// Возвращает название столбца с названием образовательного учреждения.
+    /// Возвращает номер столбца с названием образовательного учреждения.
     /// </summary>
-    public const string ColumnWithSchoolName = "B";
+    public const int ColumnWithSchoolName = 2; // B
 
     /// <summary>
-    /// Возвращает название столбца с кодом участника.
+    /// Возвращает номер столбца с кодом участника.
     /// </summary>
-    public const string ColumnWithParticipantCode = "C";
+    public const int ColumnWithParticipantCode = 3; // C
 
     /// <summary>
-    /// Возвращает название столбца с фамилией ученика.
+    /// Возвращает номер столбца с фамилией ученика.
     /// </summary>
-    public const string ColumnWithStudentLastName = "D";
+    public const int ColumnWithStudentLastName = 4; // D
 
     /// <summary>
-    /// Возвращает название столбца с именем ученика.
+    /// Возвращает номер столбца с именем ученика.
     /// </summary>
-    public const string ColumnWithStudentFirstName = "E";
+    public const int ColumnWithStudentFirstName = 5; // E
 
     /// <summary>
-    /// Возвращает название столбца с отчеством ученика.
+    /// Возвращает номер столбца с отчеством ученика.
     /// </summary>
-    public const string ColumnWithStudentMiddleName = "F";
+    public const int ColumnWithStudentMiddleName = 6; // F
 
     /// <summary>
-    /// Возвращает название столбца с полом ученика.
+    /// Возвращает номер столбца с полом ученика.
     /// </summary>
-    public const string ColumnWithSexStudent = "G";
+    public const int ColumnWithSexStudent = 7; // G
 
     /// <summary>
-    /// Возвращает название столбца с предварительный баллом по теории.
+    /// Возвращает номер столбца с предварительным баллом по теории.
     /// </summary>
-    public const string ColumnWithPreliminaryScoreInTheory = "J";
+    public const int ColumnWithPreliminaryScoreInTheory = 10; // J
 
     /// <summary>
-    /// Возвращает название столбца с итоговым баллом по теории.
+    /// Возвращает номер столбца с итоговым баллом по теории.
     /// </summary>
-    public const string ColumnWithFinalScoreInTheory = "K";
+    public const int ColumnWithFinalScoreInTheory = 11; // K
 
     /// <summary>
-    /// Возвращает название столбца с предварительный баллом по практике.
+    /// Возвращает номер столбца с предварительным баллом по практике.
     /// </summary>
-    public const string ColumnWithPreliminaryScoreInPractice = "L";
+    public const int ColumnWithPreliminaryScoreInPractice = 12; // L
 
     /// <summary>
-    /// Возвращает название столбца с итоговым баллом по практике.
+    /// Возвращает номер столбца с итоговым баллом по практике.
     /// </summary>
-    public const string ColumnWithFinalScoreInPractice = "M";
+    public const int ColumnWithFinalScoreInPractice = 13; // M
 
     /// <summary>
-    /// Возвращает название столбца с напрвлением практики.
+    /// Возвращает номер столбца с направлением практики.
     /// </summary>
-    public const string ColumnWithDirectionPractice = "I";
+    public const int ColumnWithDirectionPractice = 9; // I
 
     /// <summary>
-    /// Возвращает название столбца с названием класса, в котором учится ученик.
+    /// Возвращает номера столбцов с названием класса, в котором учится ученик.
     /// </summary>
-    public static readonly (string BaseCurrentCompeting, string PECurrentCompeting) ColumnWithCurrentCompeting =
-        ("H", "I");
+    public static readonly (int BaseCurrentCompeting, int PECurrentCompeting) ColumnWithCurrentCompeting =
+        (8, 9); // H, I
 
     /// <summary>
-    /// Возвращает название столбца с итоговым баллом.
+    /// Возвращает номера столбцов с итоговым баллом.
     /// </summary>
-    public static readonly (string BaseFinalScore, string TechnologyFinalScore, string PEFinalScore)
-        ColumnWithFinalScore = ("I", "J", "N");
+    public static readonly (int BaseFinalScore, int TechnologyFinalScore, int PEFinalScore)
+        ColumnWithFinalScore = (9, 10, 14); // I, J, N
 
     /// <summary>
-    /// Возвращает название столбца с процентом выполнения.
+    /// Возвращает номера столбцов с процентом выполнения.
     /// </summary>
-    public static readonly (string BasePercentage, string TechnologyPercentage, string PEPercentage)
-        ColumnWithPercentage = ("J", "K", "O");
+    public static readonly (int BasePercentage, int TechnologyPercentage, int PEPercentage)
+        ColumnWithPercentage = (10, 11, 15); // J, K, O
 
     /// <summary>
-    /// Возвращает название столбца со статусом ученика.
+    /// Возвращает номера столбцов со статусом ученика.
     /// </summary>
-    public static readonly (string BaseStatus, string TechnologyStatus, string PEStatus) ColumnWithStatus =
-        ("K", "L", "P");
+    public static readonly (int BaseStatus, int TechnologyStatus, int PEStatus) ColumnWithStatus =
+        (11, 12, 16); // K, L, P
 
     /// <summary>
-    /// Возвращает возможные начальные строчки.
+    /// Возвращает возможные начальные строки.
     /// </summary>
     public static readonly (int StartRow, int PeStartRow) StartRow = (15, 16);
 
     /// <summary>
-    /// Возвращает название с столбца с классом, за который выступает.
+    /// Возвращает номера столбцов с классом, за который выступает.
     /// </summary>
-    public static readonly (string BaseGradeCompeting, string PEGradeCompeting) ColumnWithGradeCompeting = ("G", "H");
+    public static readonly (int BaseGradeCompeting, int PEGradeCompeting) ColumnWithGradeCompeting = (7, 8); // G, H
 }

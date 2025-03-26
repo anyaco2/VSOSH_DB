@@ -1,4 +1,4 @@
-﻿using ClosedXML.Excel;
+﻿using OfficeOpenXml;
 using Microsoft.Extensions.Logging;
 using VSOSH.Contracts;
 using VSOSH.Contracts.Exceptions;
@@ -10,277 +10,259 @@ using Subject = VSOSH.Domain.Subject;
 
 namespace VSOSH.Dal.Services;
 
-/// <summary>
-/// Представляет реализцаию <see cref="IPassingPointsService" />.
-/// </summary>
 public class PassingPointsService : IPassingPointsService
 {
     private readonly ILogger<PassingPointsService> _logger;
     private readonly IResultRepository _resultRepository;
 
-    /// <summary>
-    /// Инициализирует новый экземпляр класса <see cref="PassingPointsService" />.
-    /// </summary>
-    /// <param name="resultRepository"><see cref="IResultRepository" />.</param>
-    /// <param name="logger"><see cref="ILogger{PassingPointsService}" />.</param>
-    /// <exception cref="ArgumentNullException">Если хотя бы один из аргументов не задан.</exception>
     public PassingPointsService(IResultRepository resultRepository, ILogger<PassingPointsService> logger)
     {
         _resultRepository = resultRepository ?? throw new ArgumentNullException(nameof(resultRepository));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+
+        ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
     }
 
-    /// <inheritdoc />
     public async Task<FileStream> GetPassingPoints(Subject subject, CancellationToken cancellationToken = default)
     {
         var pathToFile =
             Path.Combine(ProfileLocationStorage.ServiceFiles, $"Проходной_балл_{subject.GetString()}.xlsx");
+
         if (File.Exists(pathToFile))
         {
             File.Delete(pathToFile);
         }
 
         var results = await GetResults(subject, cancellationToken);
-        var workbook = new XLWorkbook();
-        if (results is null || results.Count == 0)
-        {
-            const string message = "Нет данных для формирования проходных баллов.";
-            _logger.LogError(message);
-            throw new NotFoundException(message);
-        }
 
-        int? previousGradeCompeting = null;
-        IXLWorksheet? workSheet = null;
-        var row = 2;
-        if (subject == Subject.PhysicalEducation)
+        using (var excelPackage = new ExcelPackage())
         {
-            var males = results.Select(s => s as PhysicalEducationResult)
-                .Where(s => s.Sex == Sex.Male);
-            var females = results.Select(s => s as PhysicalEducationResult)
-                .Where(s => s.Sex == Sex.Female);
-            foreach (var result in males)
+            if (results is null || results.Count == 0)
             {
-                if (!previousGradeCompeting.HasValue || previousGradeCompeting != result.GradeCompeting)
-                {
-                    var isExists = workbook.Worksheets.TryGetWorksheet($"{result.GradeCompeting.ToString()}М",
-                        out workSheet);
-                    if (isExists) continue;
-                    workbook.Worksheets.Add($"{result.GradeCompeting.ToString()}М");
-                    workSheet = workbook.Worksheets.Worksheet($"{result.GradeCompeting.ToString()}М");
-                    previousGradeCompeting = result.GradeCompeting;
-                    CreateHeader(workSheet.Row(1), subject);
-                    row = 2;
-                }
-
-                AddDataInWorkSheet(workSheet!.Row(row++), result, subject);
+                const string message = "Нет данных для формирования проходных баллов.";
+                _logger.LogError(message);
+                throw new NotFoundException(message);
             }
 
-            row = 2;
-            foreach (var result in females)
+            ExcelWorksheet? workSheet = null;
+            var row = 2;
+
+            if (subject == Subject.PhysicalEducation)
             {
-                if (!previousGradeCompeting.HasValue || previousGradeCompeting != result.GradeCompeting)
+                var males = results
+                            .SelectMany(g => g.Select(s => s as PhysicalEducationResult).Where(s => s.Sex == Sex.Male))
+                            .GroupBy(s => s.GradeCompeting);
+                var females = results
+                            .SelectMany(
+                                g => g.Select(s => s as PhysicalEducationResult).Where(s => s.Sex == Sex.Female))
+                            .GroupBy(s => s.GradeCompeting);
+                foreach (var result in males)
                 {
-                    var isExists = workbook.Worksheets.TryGetWorksheet($"{result.GradeCompeting.ToString()}Ж",
-                        out workSheet);
-                    if (isExists) continue;
-                    workbook.Worksheets.Add($"{result.GradeCompeting.ToString()}Ж");
-                    workSheet = workbook.Worksheets.Worksheet($"{result.GradeCompeting.ToString()}Ж");
-                    previousGradeCompeting = result.GradeCompeting;
-                    CreateHeader(workSheet.Row(1), subject);
+                    workSheet = excelPackage.Workbook.Worksheets.Add($"{result.Key}М");
+                    CreateHeader(workSheet, subject);
                     row = 2;
+                    foreach (var resultBase in result.Where(s => s.GradeCompeting == result.Key).OrderByDescending(s => s.FinalScore))
+                    {
+                        AddDataInWorkSheet(workSheet, row++, resultBase, subject);
+                    }
                 }
 
-                AddDataInWorkSheet(workSheet!.Row(row++), result, subject);
-            }
-        }
-        else
-        {
-            foreach (var result in results)
-            {
-                if (!previousGradeCompeting.HasValue || previousGradeCompeting != result.GradeCompeting)
+                foreach (var result in females)
                 {
-                    var isExists = workbook.Worksheets.TryGetWorksheet(result.GradeCompeting.ToString(),
-                        out workSheet);
-                    if (isExists) continue;
-                    workbook.Worksheets.Add(result.GradeCompeting.ToString());
-                    workSheet = workbook.Worksheets.Worksheet(result.GradeCompeting.ToString());
-                    previousGradeCompeting = result.GradeCompeting;
-                    CreateHeader(workSheet.Row(1), subject);
+                    workSheet = excelPackage.Workbook.Worksheets.Add($"{result.Key}Ж");
+                    CreateHeader(workSheet, subject);
                     row = 2;
+                    foreach (var resultBase in result.Where(s => s.GradeCompeting == result.Key).OrderByDescending(s => s.FinalScore))
+                    {
+                        AddDataInWorkSheet(workSheet, row++, resultBase, subject);
+                    }
                 }
-
-                AddDataInWorkSheet(workSheet!.Row(row++), result, subject);
             }
+            else
+            {
+                foreach (var result in results)
+                {
+                    workSheet = excelPackage.Workbook.Worksheets.Add(result.Key.ToString());
+                    CreateHeader(workSheet, subject);
+                    row = 2;
+                    foreach (var resultBase in result.Select(s => s).OrderByDescending(s => s.FinalScore))
+                    {
+                        AddDataInWorkSheet(workSheet, row++, resultBase, subject);
+                    }
+                }
+            }
+            excelPackage.SaveAs(new FileInfo(pathToFile));
         }
 
-        foreach (var worksheet in workbook.Worksheets)
-        {
-            Sort(worksheet, subject);
-        }
-
-        var stream = new FileStream(pathToFile, FileMode.OpenOrCreate);
-        workbook.SaveAs(stream);
-        return stream;
+        return new FileStream(pathToFile, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Read);
     }
 
-    private void CreateHeader(IXLRow row, Subject subject)
+    private void CreateHeader(ExcelWorksheet worksheet, Subject subject)
     {
         if (subject is not (Subject.PhysicalEducation or Subject.Technology))
         {
-            CreateHeaderBase(row);
+            CreateHeaderBase(worksheet);
         }
         else if (subject == Subject.PhysicalEducation)
         {
-            CreateHeaderPe(row);
+            CreateHeaderPe(worksheet);
         }
         else
         {
-            CreateHeaderTech(row);
+            CreateHeaderTech(worksheet);
         }
     }
 
-    private static void Sort(IXLWorksheet? workSheet, Subject subject)
+    private static void CreateHeaderTech(ExcelWorksheet worksheet)
     {
-        if (subject is Subject.PhysicalEducation or Subject.Technology)
+        worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithSchoolName].Value = "ОУ";
+        worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithLastName].Value = "Фамилия";
+        worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithFirstName].Value = "Имя";
+        worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithGradeCompeting.Base].Value = "Класс, за который выступает";
+        worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithPractice].Value = "Направление практики";
+        worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithPercentage.TechnologyOrPe].Value = "%";
+        worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithFinalScore.TechnologyOrPe].Value = "Итоговый балл";
+        worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithStatus.TechnologyOrPe].Value = "Статус";
+
+        FormatHeader(worksheet);
+    }
+
+    private static void CreateHeaderPe(ExcelWorksheet worksheet)
+    {
+        worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithSchoolName].Value = "ОУ";
+        worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithLastName].Value = "Фамилия";
+        worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithFirstName].Value = "Имя";
+        worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithSex].Value = "Пол";
+        worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithGradeCompeting.Pe].Value = "Класс, за который выступает";
+        worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithPercentage.TechnologyOrPe].Value = "%";
+        worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithFinalScore.TechnologyOrPe].Value = "Итоговый балл";
+        worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithStatus.TechnologyOrPe].Value = "Статус";
+
+        FormatHeader(worksheet);
+    }
+
+    private static void CreateHeaderBase(ExcelWorksheet worksheet)
+    {
+        worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithSchoolName].Value = "ОУ";
+        worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithLastName].Value = "Фамилия";
+        worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithFirstName].Value = "Имя";
+        worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithGradeCompeting.Base].Value = "Класс, за который выступает";
+        worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithPercentage.Base].Value = "%";
+        worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithFinalScore.Base].Value = "Итоговый балл";
+        worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithStatus.Base].Value = "Статус";
+
+        FormatHeader(worksheet);
+    }
+
+    private static void FormatHeader(ExcelWorksheet worksheet)
+    {
+        using (var range = worksheet.Cells[1, 1, 1, 8])
         {
-            workSheet?.Sort(ExcelPassingPointsInfo.ColumnWithFinalScore.TechnologyOrPe, XLSortOrder.Descending);
+            range.Style.Font.Bold = true;
+            range.Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
         }
-
-        workSheet?.Sort(ExcelPassingPointsInfo.ColumnWithFinalScore.Base, XLSortOrder.Descending);
     }
 
-    private static void CreateHeaderTech(IXLRow row)
-    {
-        row.Cell(ExcelPassingPointsInfo.ColumnWithSchoolName).SetValue("ОУ");
-        row.Cell(ExcelPassingPointsInfo.ColumnWithLastName).SetValue("Фамилия");
-        row.Cell(ExcelPassingPointsInfo.ColumnWithFirstName).SetValue("Имя");
-        row.Cell(ExcelPassingPointsInfo.ColumnWithGradeCompeting.Base).SetValue("Класс, за который выступает");
-        row.Cell(ExcelPassingPointsInfo.ColumnWithPractice).SetValue("Направление практики");
-        row.Cell(ExcelPassingPointsInfo.ColumnWithPercentage.TechnologyOrPe).SetValue("%");
-        row.Cell(ExcelPassingPointsInfo.ColumnWithFinalScore.TechnologyOrPe).SetValue("Итоговый балл");
-        row.Cell(ExcelPassingPointsInfo.ColumnWithStatus.TechnologyOrPe).SetValue("Статус");
-    }
-
-    private static void CreateHeaderPe(IXLRow row)
-    {
-        row.Cell(ExcelPassingPointsInfo.ColumnWithSchoolName).SetValue("ОУ");
-        row.Cell(ExcelPassingPointsInfo.ColumnWithLastName).SetValue("Фамилия");
-        row.Cell(ExcelPassingPointsInfo.ColumnWithFirstName).SetValue("Имя");
-        row.Cell(ExcelPassingPointsInfo.ColumnWithSex).SetValue("Пол");
-        row.Cell(ExcelPassingPointsInfo.ColumnWithGradeCompeting.Pe).SetValue("Класс, за который выступает");
-        row.Cell(ExcelPassingPointsInfo.ColumnWithPercentage.TechnologyOrPe).SetValue("%");
-        row.Cell(ExcelPassingPointsInfo.ColumnWithFinalScore.TechnologyOrPe).SetValue("Итоговый балл");
-        row.Cell(ExcelPassingPointsInfo.ColumnWithStatus.TechnologyOrPe).SetValue("Статус");
-    }
-
-    private static void AddDataInWorkSheet(IXLRow row, SchoolOlympiadResultBase result, Subject subject)
+    private static void AddDataInWorkSheet(ExcelWorksheet worksheet, int row, SchoolOlympiadResultBase result,
+        Subject subject)
     {
         switch (subject)
         {
             case Subject.PhysicalEducation:
-                AddDataInWorkSheetPe(row, result as PhysicalEducationResult);
+                AddDataInWorkSheetPe(worksheet, row, result as PhysicalEducationResult);
                 break;
             case Subject.Technology:
-                AddDataInWorkSheetTechnology(row, result as TechnologyResult);
+                AddDataInWorkSheetTechnology(worksheet, row, result as TechnologyResult);
                 break;
             default:
-                AddDataInWorkSheetBase(row, result);
+                AddDataInWorkSheetBase(worksheet, row, result);
                 break;
         }
     }
 
-    private static void AddDataInWorkSheetPe(IXLRow row, PhysicalEducationResult result)
+    private static void AddDataInWorkSheetPe(ExcelWorksheet worksheet, int row, PhysicalEducationResult result)
     {
-        row.Cell(ExcelPassingPointsInfo.ColumnWithSchoolName).SetValue(result.School);
-        row.Cell(ExcelPassingPointsInfo.ColumnWithLastName).SetValue(result.StudentName.LastName);
-        row.Cell(ExcelPassingPointsInfo.ColumnWithFirstName).SetValue(result.StudentName.FirstName);
-        row.Cell(ExcelPassingPointsInfo.ColumnWithSex).SetValue(result.Sex.GetString());
-        row.Cell(ExcelPassingPointsInfo.ColumnWithGradeCompeting.Pe).SetValue(result.GradeCompeting);
-        row.Cell(ExcelPassingPointsInfo.ColumnWithPercentage.TechnologyOrPe).SetValue(result.Percentage);
-        row.Cell(ExcelPassingPointsInfo.ColumnWithFinalScore.TechnologyOrPe).SetValue(result.FinalScore);
-        row.Cell(ExcelPassingPointsInfo.ColumnWithStatus.TechnologyOrPe).SetValue(result.Status.GetString());
+        worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithSchoolName].Value = result.School;
+        worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithLastName].Value = result.StudentName.LastName;
+        worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithFirstName].Value = result.StudentName.FirstName;
+        worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithSex].Value = result.Sex.GetString();
+        worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithGradeCompeting.Pe].Value = result.GradeCompeting;
+        worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithPercentage.TechnologyOrPe].Value = result.Percentage;
+        worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithFinalScore.TechnologyOrPe].Value = result.FinalScore;
+        worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithStatus.TechnologyOrPe].Value = result.Status.GetString();
     }
 
-    private static void AddDataInWorkSheetTechnology(IXLRow row, TechnologyResult result)
+    private static void AddDataInWorkSheetTechnology(ExcelWorksheet worksheet, int row, TechnologyResult result)
     {
-        row.Cell(ExcelPassingPointsInfo.ColumnWithSchoolName).SetValue(result.School);
-        row.Cell(ExcelPassingPointsInfo.ColumnWithLastName).SetValue(result.StudentName.LastName);
-        row.Cell(ExcelPassingPointsInfo.ColumnWithFirstName).SetValue(result.StudentName.FirstName);
-        row.Cell(ExcelPassingPointsInfo.ColumnWithGradeCompeting.Base).SetValue(result.GradeCompeting);
-        ;
-        row.Cell(ExcelPassingPointsInfo.ColumnWithPractice).SetValue(result.DirectionPractice);
-        row.Cell(ExcelPassingPointsInfo.ColumnWithPercentage.TechnologyOrPe).SetValue(result.Percentage);
-        row.Cell(ExcelPassingPointsInfo.ColumnWithFinalScore.TechnologyOrPe).SetValue(result.FinalScore);
-        row.Cell(ExcelPassingPointsInfo.ColumnWithStatus.TechnologyOrPe).SetValue(result.Status.GetString());
+        worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithSchoolName].Value = result.School;
+        worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithLastName].Value = result.StudentName.LastName;
+        worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithFirstName].Value = result.StudentName.FirstName;
+        worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithGradeCompeting.Base].Value = result.GradeCompeting;
+        worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithPractice].Value = result.DirectionPractice;
+        worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithPercentage.TechnologyOrPe].Value = result.Percentage;
+        worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithFinalScore.TechnologyOrPe].Value = result.FinalScore;
+        worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithStatus.TechnologyOrPe].Value = result.Status.GetString();
     }
 
-    private static void AddDataInWorkSheetBase(IXLRow row, SchoolOlympiadResultBase result)
+    private static void AddDataInWorkSheetBase(ExcelWorksheet worksheet, int row, SchoolOlympiadResultBase result)
     {
-        row.Cell(ExcelPassingPointsInfo.ColumnWithSchoolName).SetValue(result.School);
-        row.Cell(ExcelPassingPointsInfo.ColumnWithLastName).SetValue(result.StudentName.LastName);
-        row.Cell(ExcelPassingPointsInfo.ColumnWithFirstName).SetValue(result.StudentName.FirstName);
-        row.Cell(ExcelPassingPointsInfo.ColumnWithGradeCompeting.Base).SetValue(result.GradeCompeting);
-        row.Cell(ExcelPassingPointsInfo.ColumnWithPercentage.Base).SetValue(result.Percentage);
-        row.Cell(ExcelPassingPointsInfo.ColumnWithFinalScore.Base).SetValue(result.FinalScore);
-        row.Cell(ExcelPassingPointsInfo.ColumnWithStatus.Base).SetValue(result.Status.GetString());
+        worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithSchoolName].Value = result.School;
+        worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithLastName].Value = result.StudentName.LastName;
+        worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithFirstName].Value = result.StudentName.FirstName;
+        worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithGradeCompeting.Base].Value = result.GradeCompeting;
+        worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithPercentage.Base].Value = result.Percentage;
+        worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithFinalScore.Base].Value = result.FinalScore;
+        worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithStatus.Base].Value = result.Status.GetString();
     }
 
-    private static void CreateHeaderBase(IXLRow row)
-    {
-        row.Cell(ExcelPassingPointsInfo.ColumnWithSchoolName).SetValue("ОУ");
-        row.Cell(ExcelPassingPointsInfo.ColumnWithLastName).SetValue("Фамилия");
-        row.Cell(ExcelPassingPointsInfo.ColumnWithFirstName).SetValue("Имя");
-        row.Cell(ExcelPassingPointsInfo.ColumnWithGradeCompeting.Base).SetValue("Класс, за который выступает");
-        row.Cell(ExcelPassingPointsInfo.ColumnWithPercentage.Base).SetValue("%");
-        row.Cell(ExcelPassingPointsInfo.ColumnWithFinalScore.Base).SetValue("Итоговый балл");
-        row.Cell(ExcelPassingPointsInfo.ColumnWithStatus.Base).SetValue("Статус");
-    }
-
-    private async Task<IReadOnlyCollection<SchoolOlympiadResultBase>?> GetResults(Subject subject,
+    private async Task<IReadOnlyCollection<IGrouping<int, SchoolOlympiadResultBase>>> GetResults(Subject subject,
         CancellationToken cancellationToken)
     {
         return subject switch
         {
-            Subject.Art => await _resultRepository.FindRangeAsync<ArtResult>(cancellationToken: cancellationToken),
-            Subject.Astronomy => await _resultRepository.FindRangeAsync<AstronomyResult>(
+            Subject.Art => await _resultRepository.FindWithGroupByGradeCompeting<ArtResult>(
                 cancellationToken: cancellationToken),
-            Subject.Biology => await _resultRepository.FindRangeAsync<BiologyResult>(
+            Subject.Astronomy => await _resultRepository.FindWithGroupByGradeCompeting<AstronomyResult>(
                 cancellationToken: cancellationToken),
-            Subject.Chemistry => await _resultRepository.FindRangeAsync<ChemistryResult>(
+            Subject.Biology => await _resultRepository.FindWithGroupByGradeCompeting<BiologyResult>(
                 cancellationToken: cancellationToken),
-            Subject.Chinese => await _resultRepository.FindRangeAsync<ChineseResult>(
+            Subject.Chemistry => await _resultRepository.FindWithGroupByGradeCompeting<ChemistryResult>(
                 cancellationToken: cancellationToken),
-            Subject.ComputerScience => await _resultRepository.FindRangeAsync<ComputerScienceResult>(
+            Subject.Chinese => await _resultRepository.FindWithGroupByGradeCompeting<ChineseResult>(
                 cancellationToken: cancellationToken),
-            Subject.Ecology => await _resultRepository.FindRangeAsync<EcologyResult>(
+            Subject.ComputerScience => await _resultRepository.FindWithGroupByGradeCompeting<ComputerScienceResult>(
                 cancellationToken: cancellationToken),
-            Subject.Economy => await _resultRepository.FindRangeAsync<EconomyResult>(
+            Subject.Ecology => await _resultRepository.FindWithGroupByGradeCompeting<EcologyResult>(
                 cancellationToken: cancellationToken),
-            Subject.English => await _resultRepository.FindRangeAsync<EnglishResult>(
+            Subject.Economy => await _resultRepository.FindWithGroupByGradeCompeting<EconomyResult>(
                 cancellationToken: cancellationToken),
-            Subject.French =>
-                await _resultRepository.FindRangeAsync<FrenchResult>(cancellationToken: cancellationToken),
-            Subject.FundamentalsLifeSafety => await _resultRepository.FindRangeAsync<FundamentalsLifeSafetyResult>(
+            Subject.English => await _resultRepository.FindWithGroupByGradeCompeting<EnglishResult>(
                 cancellationToken: cancellationToken),
-            Subject.Geography => await _resultRepository.FindRangeAsync<GeographyResult>(
+            Subject.French => await _resultRepository.FindWithGroupByGradeCompeting<FrenchResult>(
                 cancellationToken: cancellationToken),
-            Subject.German =>
-                await _resultRepository.FindRangeAsync<GermanResult>(cancellationToken: cancellationToken),
-            Subject.History => await _resultRepository.FindRangeAsync<HistoryResult>(
+            Subject.FundamentalsLifeSafety => await _resultRepository
+                .FindWithGroupByGradeCompeting<FundamentalsLifeSafetyResult>(cancellationToken: cancellationToken),
+            Subject.Geography => await _resultRepository.FindWithGroupByGradeCompeting<GeographyResult>(
                 cancellationToken: cancellationToken),
-            Subject.Law => await _resultRepository.FindRangeAsync<LawResult>(cancellationToken: cancellationToken),
-            Subject.Literature => await _resultRepository.FindRangeAsync<LiteratureResult>(
+            Subject.German => await _resultRepository.FindWithGroupByGradeCompeting<GermanResult>(
                 cancellationToken: cancellationToken),
-            Subject.Math => await _resultRepository.FindRangeAsync<MathResult>(cancellationToken: cancellationToken),
-            Subject.PhysicalEducation => await _resultRepository.FindRangeAsync<PhysicalEducationResult>(
+            Subject.History => await _resultRepository.FindWithGroupByGradeCompeting<HistoryResult>(
                 cancellationToken: cancellationToken),
-            Subject.Physic =>
-                await _resultRepository.FindRangeAsync<PhysicResult>(cancellationToken: cancellationToken),
-            Subject.Russian => await _resultRepository.FindRangeAsync<RussianResult>(
+            Subject.Law => await _resultRepository.FindWithGroupByGradeCompeting<LawResult>(
                 cancellationToken: cancellationToken),
-            Subject.SocialStudies => await _resultRepository.FindRangeAsync<SocialStudiesResult>(
+            Subject.Literature => await _resultRepository.FindWithGroupByGradeCompeting<LiteratureResult>(
                 cancellationToken: cancellationToken),
-            Subject.Technology => await _resultRepository.FindRangeAsync<TechnologyResult>(
+            Subject.Math => await _resultRepository.FindWithGroupByGradeCompeting<MathResult>(
+                cancellationToken: cancellationToken),
+            Subject.PhysicalEducation => await _resultRepository.FindWithGroupByGradeCompeting<PhysicalEducationResult>(
+                cancellationToken: cancellationToken),
+            Subject.Physic => await _resultRepository.FindWithGroupByGradeCompeting<PhysicResult>(
+                cancellationToken: cancellationToken),
+            Subject.Russian => await _resultRepository.FindWithGroupByGradeCompeting<RussianResult>(
+                cancellationToken: cancellationToken),
+            Subject.SocialStudies => await _resultRepository.FindWithGroupByGradeCompeting<SocialStudiesResult>(
+                cancellationToken: cancellationToken),
+            Subject.Technology => await _resultRepository.FindWithGroupByGradeCompeting<TechnologyResult>(
                 cancellationToken: cancellationToken),
             _ => throw new ArgumentOutOfRangeException(nameof(subject), subject, null)
         };
