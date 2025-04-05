@@ -2,18 +2,26 @@
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using VSOSH.Contracts;
-using VSOSH.HttpClient;
+using VSOSH.Domain;
+using VSOSH.Domain.Services;
 
 namespace VSOSH.UI;
 
 public partial class MainWindow : Form
 {
-	private readonly ApiClient _apiClient;
+	private readonly IParser _parser;
+	private readonly IGeneralReportService _generalReportService;
+	private readonly IGreaterClassService _greaterClassService;
+	private readonly IPassingPointsService _passingPointsService;
+	private readonly IQuantitativeDataService _quantitativeDataService;
 
-	public MainWindow()
+	public MainWindow(IParser parser, IGeneralReportService generalReportService, IGreaterClassService greaterClassService, IPassingPointsService passingPointsService, IQuantitativeDataService quantitativeDataService)
 	{
-		_apiClient = new ApiClient(new System.Net.Http.HttpClient());
+		_parser = parser;
+		_generalReportService = generalReportService;
+		_greaterClassService = greaterClassService;
+		_passingPointsService = passingPointsService;
+		_quantitativeDataService = quantitativeDataService;
 		InitializeComponent();
 	}
 
@@ -46,7 +54,7 @@ public partial class MainWindow : Form
 			"обществознание" => Subject.SocialStudies,
 			"труды" => Subject.Technology
 		};
-		var bytes = await _apiClient.GetPassingPointsAsync(subject);
+		await using var fileStream = await _passingPointsService.GetPassingPoints(subject);
 		saveFileDialog1.ShowDialog();
 		saveFileDialog1.Title = "Save";
 		saveFileDialog1.Filter = "Microsoft Excel (*.xls*)|*.xls*";
@@ -55,7 +63,7 @@ public partial class MainWindow : Form
 			try
 			{
 				// Сохраняем массив байтов в файл
-				File.WriteAllBytes($"{saveFileDialog1.FileName}.xlsx", bytes);
+				File.Copy(fileStream.Name, $"{saveFileDialog1.FileName}.xlsx");
 				MessageBox.Show("Файл успешно сохранён!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
 			}
 			catch (Exception ex)
@@ -70,62 +78,77 @@ public partial class MainWindow : Form
 		switch (comboBox2.Text)
 		{
 			case "Общий отчёт":
-				var bytes = await _apiClient.GetGeneralReportAsync();
-				saveFileDialog1.ShowDialog();
-				saveFileDialog1.Title = "Save";
-				saveFileDialog1.Filter = "Microsoft Excel (*.xls*)|*.xls*";
-				if (saveFileDialog1.ShowDialog() == DialogResult.OK)
-				{
-					try
-					{
-						// Сохраняем массив байтов в файл
-						File.WriteAllBytes($"{saveFileDialog1.FileName}.xlsx", bytes);
-						MessageBox.Show("Файл успешно сохранён!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
-					}
-					catch (Exception ex)
-					{
-						MessageBox.Show($"Ошибка сохранения файла: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-					}
-				}
+				await GeneralReportAsync();
 				break;
 			case "По классам и предметам":
-				bytes = await _apiClient.GetQuantitativeDataAsync();
-				saveFileDialog1.ShowDialog();
-				saveFileDialog1.Title = "Save";
-				saveFileDialog1.Filter = "Microsoft Excel (*.xls*)|*.xls*";
-				if (saveFileDialog1.ShowDialog() == DialogResult.OK)
-				{
-					try
-					{
-						// Сохраняем массив байтов в файл
-						File.WriteAllBytes($"{saveFileDialog1.FileName}.xlsx", bytes);
-						MessageBox.Show("Файл успешно сохранён!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
-					}
-					catch (Exception ex)
-					{
-						MessageBox.Show($"Ошибка сохранения файла: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-					}
-				}
+				await GetQuantitativeDataAsync();
 				break;
 			case "За более старший класс":
-				bytes = await _apiClient.GetGreaterClassDataAsync();
-				saveFileDialog1.ShowDialog();
-				saveFileDialog1.Title = "Save";
-				saveFileDialog1.Filter = "Microsoft Excel (*.xls*)|*.xls*";
-				if (saveFileDialog1.ShowDialog() == DialogResult.OK)
-				{
-					try
-					{
-						// Сохраняем массив байтов в файл
-						File.WriteAllBytes($"{saveFileDialog1.FileName}.xlsx", bytes);
-						MessageBox.Show("Файл успешно сохранён!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
-					}
-					catch (Exception ex)
-					{
-						MessageBox.Show($"Ошибка сохранения файла: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-					}
-				}
+				await GetGreaterClassDataAsync();
 				break;
+		}
+	}
+
+	private async Task GetGreaterClassDataAsync()
+	{
+		await using var fileStream = await _greaterClassService.GetGreaterClass();
+		saveFileDialog1.ShowDialog();
+		saveFileDialog1.Title = "Save";
+		saveFileDialog1.Filter = "Microsoft Excel (*.xls*)|*.xls*";
+		if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+		{
+			try
+			{
+				// Сохраняем массив байтов в файл
+				File.Copy(fileStream.Name, $"{saveFileDialog1.FileName}.xlsx");
+				MessageBox.Show("Файл успешно сохранён!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show($"Ошибка сохранения файла: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+			}
+		}
+	}
+
+	private async Task GetQuantitativeDataAsync()
+	{
+		await using var fileStream = await _quantitativeDataService.GetQuantitativeData();
+		saveFileDialog1.ShowDialog();
+		saveFileDialog1.Title = "Save";
+		saveFileDialog1.Filter = "Microsoft Excel (*.xls*)|*.xls*";
+		if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+		{
+			try
+			{
+				// Сохраняем массив байтов в файл
+				File.Copy(fileStream.Name, $"{saveFileDialog1.FileName}.xlsx");
+				MessageBox.Show("Файл успешно сохранён!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show($"Ошибка сохранения файла: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+			}
+		}
+	}
+
+	private async Task GeneralReportAsync()
+	{
+		await using var fileStream = await _generalReportService.GetGeneralReport();
+		saveFileDialog1.ShowDialog();
+		saveFileDialog1.Title = "Save";
+		saveFileDialog1.Filter = "Microsoft Excel (*.xls*)|*.xls*";
+		if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+		{
+			try
+			{
+				// Сохраняем массив байтов в файл
+				File.Copy(fileStream.Name, $"{saveFileDialog1.FileName}.xlsx");
+				MessageBox.Show("Файл успешно сохранён!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show($"Ошибка сохранения файла: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+			}
 		}
 	}
 
@@ -146,7 +169,7 @@ public partial class MainWindow : Form
 			var excelFileName = fileDialog1.FileName;
 			try
 			{
-				await _apiClient.UploadParserResultAsync(new FileStream(excelFileName, FileMode.Open), excelFileName);
+				await _parser.ParseAndSaveAsync(new FileStream(excelFileName, FileMode.Open));
 				MessageBox.Show("Данные успешно добавлены.");
 			}
 			catch (Exception)

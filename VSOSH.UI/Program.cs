@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace VSOSH.UI;
 
@@ -9,9 +10,16 @@ internal static class Program
     /// Главная точка входа для приложения.
     /// </summary>
     [STAThread]
-    static void Main()
+    public static void Main()
     {
-        ApplicationConfiguration.Initialize();
-        Application.Run(new MainWindow());
+        Application.EnableVisualStyles();
+        Application.SetCompatibleTextRenderingDefault(false);
+        
+        // Создаем провайдер сервисов
+        var serviceProvider = ServiceProviderFactory.CreateServiceProvider();
+        
+        // Получаем главную форму через DI
+        var mainForm = serviceProvider.GetRequiredService<MainWindow>();
+        Application.Run(mainForm);
     }
 }
