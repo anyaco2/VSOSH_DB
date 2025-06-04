@@ -9,156 +9,152 @@ namespace VSOSH.Dal;
 /// </summary>
 public class ApplicationDbContext : DbContext
 {
-    #region Data
+	#region Data
+	#region Fields
+	/// <summary>Строчка подключения к базе данных.</summary>
+	private readonly string? _connectionString;
+	#endregion
+	#endregion
 
-    /// <summary>Строчка подключения к базе данных.</summary>
-    private readonly string? _connectionString;
+	#region .ctor
+	/// <summary>Инициализирует тип <see cref="ApplicationDbContext"/>.</summary>
+	static ApplicationDbContext()
+	{
+		DefaultConnectionString = null;
+	}
 
-    #endregion
+	/// <summary>Создаёт экземпляр <see cref="ApplicationDbContext"/>.</summary>
+	public ApplicationDbContext()
+	{
+		_connectionString = DefaultConnectionString;
+	}
 
-    #region Statics
+	/// <summary>
+	/// Инициализирует новый экземпляр типа <see cref="ApplicationDbContext" />.
+	/// </summary>
+	/// <param name="options">Настройки текущего контекста.</param>
+	public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+		: base(options)
+	{
+	}
+	#endregion
 
-    /// <summary>Возвращает строчку подключения к базе данных по-умолчанию.</summary>
-    /// <value>Строчка подключения к базе данных по-умолчанию.</value>
-    public static string? DefaultConnectionString { get; }
+	#region Properties
+	/// <summary>Возвращает строчку подключения к базе данных по-умолчанию.</summary>
+	/// <value>Строчка подключения к базе данных по-умолчанию.</value>
+	public static string? DefaultConnectionString
+	{
+		get;
+	}
 
-    #endregion
+	/// <summary>
+	/// Вовзращает данные о результатах олимпиады.
+	/// </summary>
+	public DbSet<SchoolOlympiadResultBase> SchoolOlympiadResultBases => Set<SchoolOlympiadResultBase>();
+	#endregion
 
-    #region Properties
+	#region Overrided
+	/// <inheritdoc/>
+	protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+	{
+		ArgumentNullException.ThrowIfNull(nameof(optionsBuilder));
 
-    /// <summary>
-    /// Вовзращает данные о результатах олимпиады.
-    /// </summary>
-    public DbSet<SchoolOlympiadResultBase> SchoolOlympiadResultBases => Set<SchoolOlympiadResultBase>();
+		base.OnConfiguring(optionsBuilder);
 
-    #endregion
+		if (optionsBuilder.IsConfigured)
+			return;
 
-    #region .ctor
+		optionsBuilder.EnableSensitiveDataLogging();
 
-    /// <summary>Инициализирует тип <see cref="ApplicationDbContext"/>.</summary>
-    static ApplicationDbContext()
-    {
-        DefaultConnectionString = null;
-    }
+		optionsBuilder.UseNpgsql(_connectionString ?? DefaultConnectionString);
+	}
 
-    /// <summary>Создаёт экземпляр <see cref="ApplicationDbContext"/>.</summary>
-    public ApplicationDbContext()
-    {
-        _connectionString = DefaultConnectionString;
-    }
+	/// <inheritdoc />
+	protected override void OnModelCreating(ModelBuilder modelBuilder)
+	{
+		base.OnModelCreating(modelBuilder);
+		modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly(),
+													 type => type.Namespace!.StartsWith(GetType()
+																							.Namespace!));
+		modelBuilder.Entity<RussianResult>()
+					.ToTable("RussianResults")
+					.HasBaseType<SchoolOlympiadResultBase>();
 
-    /// <summary>
-    /// Инициализирует новый экземпляр типа <see cref="ApplicationDbContext" />.
-    /// </summary>
-    /// <param name="options">Настройки текущего контекста.</param>
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-        : base(options)
-    {
-    }
+		modelBuilder.Entity<SocialStudiesResult>()
+					.ToTable("SocialStudiesResults")
+					.HasBaseType<SchoolOlympiadResultBase>();
 
-    #endregion
+		modelBuilder.Entity<MathResult>()
+					.ToTable("MathResults")
+					.HasBaseType<SchoolOlympiadResultBase>();
 
-    #region Overrided
+		modelBuilder.Entity<PhysicResult>()
+					.ToTable("PhysicResults")
+					.HasBaseType<SchoolOlympiadResultBase>();
 
-    /// <inheritdoc/>
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        ArgumentNullException.ThrowIfNull(nameof(optionsBuilder));
+		modelBuilder.Entity<BiologyResult>()
+					.ToTable("BiologyResults")
+					.HasBaseType<SchoolOlympiadResultBase>();
 
-        base.OnConfiguring(optionsBuilder);
+		modelBuilder.Entity<ChemistryResult>()
+					.ToTable("ChemistryResults")
+					.HasBaseType<SchoolOlympiadResultBase>();
 
-        if (optionsBuilder.IsConfigured) return;
+		modelBuilder.Entity<ComputerScienceResult>()
+					.ToTable("ComputerScienceResults")
+					.HasBaseType<SchoolOlympiadResultBase>();
 
-        optionsBuilder.UseNpgsql(_connectionString ?? DefaultConnectionString);
-    }
+		modelBuilder.Entity<EcologyResult>()
+					.ToTable("EcologyResults")
+					.HasBaseType<SchoolOlympiadResultBase>();
 
-    /// <inheritdoc />
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        base.OnModelCreating(modelBuilder);
-        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly(),
-            type => type.Namespace!.StartsWith(GetType()
-                .Namespace!));
-        modelBuilder.Entity<RussianResult>()
-            .ToTable("RussianResults")
-            .HasBaseType<SchoolOlympiadResultBase>();
+		modelBuilder.Entity<EconomyResult>()
+					.ToTable("EconomyResults")
+					.HasBaseType<SchoolOlympiadResultBase>();
 
-        modelBuilder.Entity<SocialStudiesResult>()
-            .ToTable("SocialStudiesResults")
-            .HasBaseType<SchoolOlympiadResultBase>();
+		modelBuilder.Entity<EnglishResult>()
+					.ToTable("EnglishResults")
+					.HasBaseType<SchoolOlympiadResultBase>();
 
-        modelBuilder.Entity<MathResult>()
-            .ToTable("MathResults")
-            .HasBaseType<SchoolOlympiadResultBase>();
+		modelBuilder.Entity<FrenchResult>()
+					.ToTable("FrenchResults")
+					.HasBaseType<SchoolOlympiadResultBase>();
 
-        modelBuilder.Entity<PhysicResult>()
-            .ToTable("PhysicResults")
-            .HasBaseType<SchoolOlympiadResultBase>();
+		modelBuilder.Entity<GermanResult>()
+					.ToTable("GermanResults")
+					.HasBaseType<SchoolOlympiadResultBase>();
 
-        modelBuilder.Entity<BiologyResult>()
-            .ToTable("BiologyResults")
-            .HasBaseType<SchoolOlympiadResultBase>();
+		modelBuilder.Entity<ChineseResult>()
+					.ToTable("ChineseResults")
+					.HasBaseType<SchoolOlympiadResultBase>();
 
-        modelBuilder.Entity<ChemistryResult>()
-            .ToTable("ChemistryResults")
-            .HasBaseType<SchoolOlympiadResultBase>();
+		modelBuilder.Entity<ArtResult>()
+					.ToTable("ArtResults")
+					.HasBaseType<SchoolOlympiadResultBase>();
 
-        modelBuilder.Entity<ComputerScienceResult>()
-            .ToTable("ComputerScienceResults")
-            .HasBaseType<SchoolOlympiadResultBase>();
+		modelBuilder.Entity<AstronomyResult>()
+					.ToTable("AstronomyResults")
+					.HasBaseType<SchoolOlympiadResultBase>();
 
-        modelBuilder.Entity<EcologyResult>()
-            .ToTable("EcologyResults")
-            .HasBaseType<SchoolOlympiadResultBase>();
+		modelBuilder.Entity<GeographyResult>()
+					.ToTable("GeographyResults")
+					.HasBaseType<SchoolOlympiadResultBase>();
 
-        modelBuilder.Entity<EconomyResult>()
-            .ToTable("EconomyResults")
-            .HasBaseType<SchoolOlympiadResultBase>();
+		modelBuilder.Entity<HistoryResult>()
+					.ToTable("HistoryResults")
+					.HasBaseType<SchoolOlympiadResultBase>();
 
-        modelBuilder.Entity<EnglishResult>()
-            .ToTable("EnglishResults")
-            .HasBaseType<SchoolOlympiadResultBase>();
+		modelBuilder.Entity<LawResult>()
+					.ToTable("LawResults")
+					.HasBaseType<SchoolOlympiadResultBase>();
 
-        modelBuilder.Entity<FrenchResult>()
-            .ToTable("FrenchResults")
-            .HasBaseType<SchoolOlympiadResultBase>();
+		modelBuilder.Entity<LiteratureResult>()
+					.ToTable("LiteratureResults")
+					.HasBaseType<SchoolOlympiadResultBase>();
 
-        modelBuilder.Entity<GermanResult>()
-            .ToTable("GermanResults")
-            .HasBaseType<SchoolOlympiadResultBase>();
-
-        modelBuilder.Entity<ChineseResult>()
-            .ToTable("ChineseResults")
-            .HasBaseType<SchoolOlympiadResultBase>();
-
-        modelBuilder.Entity<ArtResult>()
-            .ToTable("ArtResults")
-            .HasBaseType<SchoolOlympiadResultBase>();
-
-        modelBuilder.Entity<AstronomyResult>()
-            .ToTable("AstronomyResults")
-            .HasBaseType<SchoolOlympiadResultBase>();
-
-        modelBuilder.Entity<GeographyResult>()
-            .ToTable("GeographyResults")
-            .HasBaseType<SchoolOlympiadResultBase>();
-
-        modelBuilder.Entity<HistoryResult>()
-            .ToTable("HistoryResults")
-            .HasBaseType<SchoolOlympiadResultBase>();
-
-        modelBuilder.Entity<LawResult>()
-            .ToTable("LawResults")
-            .HasBaseType<SchoolOlympiadResultBase>();
-
-        modelBuilder.Entity<LiteratureResult>()
-            .ToTable("LiteratureResults")
-            .HasBaseType<SchoolOlympiadResultBase>();
-
-        modelBuilder.Entity<FundamentalsLifeSafetyResult>()
-            .ToTable("FundamentalsLifeSafetyResults")
-            .HasBaseType<SchoolOlympiadResultBase>();
-    }
-
-    #endregion
+		modelBuilder.Entity<FundamentalsLifeSafetyResult>()
+					.ToTable("FundamentalsLifeSafetyResults")
+					.HasBaseType<SchoolOlympiadResultBase>();
+	}
+	#endregion
 }

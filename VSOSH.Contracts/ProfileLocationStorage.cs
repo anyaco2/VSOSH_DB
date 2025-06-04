@@ -2,8 +2,16 @@
 
 public static class ProfileLocationStorage
 {
-    /// <summary>
-    /// Путь до файлов проекта.
-    /// </summary>
-    public static string ServiceFiles = Path.Combine(@"C:\VSOSH");
+	#region Data
+	#region Static
+	/// <summary>
+	/// Путь до директории с логами.
+	/// </summary>
+	public static string LogDirPath = Path.Combine(@"C:\VSOSH\Logs");
+	/// <summary>
+	/// Путь до файлов проекта.
+	/// </summary>
+	public static string ServiceFiles = Path.Combine(@"C:\VSOSH");
+	#endregion
+	#endregion
 }

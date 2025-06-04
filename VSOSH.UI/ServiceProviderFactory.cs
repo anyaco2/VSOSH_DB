@@ -3,6 +3,7 @@ using System.IO;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
 using VSOSH.Contracts;
 using VSOSH.Dal;
 using VSOSH.Dal.Parser;
@@ -15,47 +16,80 @@ namespace VSOSH.UI;
 
 public static class ServiceProviderFactory
 {
-    private static IServiceProvider ServiceProvider { get; set; }
-    
-    private static IConfiguration Configuration { get; set; } = null!;
+	#region Properties
+	private static IConfiguration Configuration
+	{
+		get;
+		set;
+	} = null!;
 
-    public static IServiceProvider CreateServiceProvider()
-    {
-        var d = Directory.GetCurrentDirectory();
-        var builder = new ConfigurationBuilder()
-                      .SetBasePath(Directory.GetCurrentDirectory())
-                      .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
-        Configuration = builder.Build();
+	private static ILogger Log
+	{
+		get;
+		set;
+	}
 
-        
-        if (!Directory.Exists(ProfileLocationStorage.ServiceFiles))
-        {
-            Directory.CreateDirectory(ProfileLocationStorage.ServiceFiles);
-        }
-        
-        var services = new ServiceCollection();
-        
-        services.AddSingleton(Configuration);
-        services.AddLogging();
-        
-        services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseNpgsql(Configuration.GetConnectionString("Database")));
-        
-        services.AddScoped<IParser, ResultParser>();
-        services.AddScoped<IResultRepository, ResultRepository>();
-        services.AddScoped<IPassingPointsService, PassingPointsService>();
-        services.AddScoped<IGeneralReportService, GeneralReportService>();
-        services.AddScoped<IQuantitativeDataService, QuantitativeDataService>();
-        services.AddScoped<IGreaterClassService, GreaterClassService>();
-        ServiceProvider = services.BuildServiceProvider();
-        using (var scope = ServiceProvider.CreateScope())
-        {
-            var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-            dbContext.Database.Migrate();
-        }
+	private static IServiceProvider ServiceProvider
+	{
+		get;
+		set;
+	}
+	#endregion
 
-        services.AddTransient<MainWindow>();
-        
-        return services.BuildServiceProvider();
-    }
+	#region Public
+	public static IServiceProvider CreateServiceProvider()
+	{
+		var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory())
+												.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+		Configuration = builder.Build();
+
+		if (!Directory.Exists(ProfileLocationStorage.ServiceFiles))
+		{
+			Directory.CreateDirectory(ProfileLocationStorage.ServiceFiles);
+		}
+
+		var services = new ServiceCollection();
+
+		services.AddSingleton(Configuration);
+		services.AddSerilog();
+		Serilog.Log.Logger = SwitchableLogger.Instance.Logger = SwitchableLogger.Instance;
+		SwitchableLogger.Instance.Logger = GetBaseLoggerConfig()
+			.CreateLogger();
+		Log = Serilog.Log.ForContext(typeof(Program));
+
+		services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("Database")));
+
+		services.AddScoped<IParser, ResultParser>();
+		services.AddScoped<IResultRepository, ResultRepository>();
+		services.AddScoped<IPassingPointsService, PassingPointsService>();
+		services.AddScoped<IGeneralReportService, GeneralReportService>();
+		services.AddScoped<IQuantitativeDataService, QuantitativeDataService>();
+		services.AddScoped<IGreaterClassService, GreaterClassService>();
+		ServiceProvider = services.BuildServiceProvider();
+		using (var scope = ServiceProvider.CreateScope())
+		{
+			Log.Information("Начало миграции.");
+			var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+			dbContext.Database.Migrate();
+			Log.Information("Миграция успешно применилась.");
+		}
+
+		services.AddTransient<MainWindow>();
+
+		return services.BuildServiceProvider();
+	}
+
+	/// <summary>Возвращает конфигурацию логирования приложения.</summary>
+	/// <returns>Конфигурация логирования приложения.</returns>
+	internal static LoggerConfiguration GetBaseLoggerConfig()
+	{
+		var path = ProfileLocationStorage.LogDirPath;
+		Directory.CreateDirectory(path);
+
+		return !Configuration.GetSection("Serilog")
+							 .Exists()
+				   ? BaseLoggerConfigurationProvider.GetBaseLoggerConfig("GamesLibraryService", true)
+				   : new LoggerConfiguration().ReadFrom.Configuration(Configuration);
+	}
+	#endregion
 }
