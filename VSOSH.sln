@@ -11,6 +11,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSOSH.Dal", "VSOSH.Dal\VSOS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSOSH.Contracts", "VSOSH.Contracts\VSOSH.Contracts.csproj", "{71001CB5-237C-4E8A-9827-74E38FCCF82D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "shared", "shared", "{01DDCD58-EA78-42EA-AFEF-8BCA98E680FF}"
+	ProjectSection(SolutionItems) = preProject
+		configuration.json = configuration.json
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

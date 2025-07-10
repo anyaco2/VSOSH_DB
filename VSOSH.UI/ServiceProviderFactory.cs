@@ -39,23 +39,31 @@ public static class ServiceProviderFactory
 	#region Public
 	public static IServiceProvider CreateServiceProvider()
 	{
-		var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory())
-												.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
-		Configuration = builder.Build();
-
 		if (!Directory.Exists(ProfileLocationStorage.ServiceFiles))
 		{
 			Directory.CreateDirectory(ProfileLocationStorage.ServiceFiles);
+			Directory.CreateDirectory(ProfileLocationStorage.ConfigDirPath);
 		}
 
 		var services = new ServiceCollection();
 
-		services.AddSingleton(Configuration);
 		services.AddSerilog();
 		Serilog.Log.Logger = SwitchableLogger.Instance.Logger = SwitchableLogger.Instance;
 		SwitchableLogger.Instance.Logger = GetBaseLoggerConfig()
 			.CreateLogger();
 		Log = Serilog.Log.ForContext(typeof(Program));
+		if (!File.Exists(ProfileLocationStorage.ConfigPath))
+		{
+			Log.Error("Не найден файл конфигурации.");
+			throw new ApplicationException("Не найден файл конфигурации.");
+		}
+
+		var builder = new ConfigurationBuilder().SetBasePath(ProfileLocationStorage.ConfigDirPath)
+												.AddJsonFile(ProfileLocationStorage.ConfigFileName, optional: false, reloadOnChange: true);
+		Configuration = builder.Build();
+		
+		services.AddSingleton(Configuration);
+
 
 		services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("Database")));
 
@@ -79,17 +87,12 @@ public static class ServiceProviderFactory
 		return services.BuildServiceProvider();
 	}
 
-	/// <summary>Возвращает конфигурацию логирования приложения.</summary>
-	/// <returns>Конфигурация логирования приложения.</returns>
-	internal static LoggerConfiguration GetBaseLoggerConfig()
+	private static LoggerConfiguration GetBaseLoggerConfig()
 	{
 		var path = ProfileLocationStorage.LogDirPath;
 		Directory.CreateDirectory(path);
 
-		return !Configuration.GetSection("Serilog")
-							 .Exists()
-				   ? BaseLoggerConfigurationProvider.GetBaseLoggerConfig("GamesLibraryService", true)
-				   : new LoggerConfiguration().ReadFrom.Configuration(Configuration);
+		return BaseLoggerConfigurationProvider.GetBaseLoggerConfig("GamesLibraryService", true);
 	}
 	#endregion
 }
