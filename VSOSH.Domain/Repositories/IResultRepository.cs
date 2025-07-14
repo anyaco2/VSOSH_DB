@@ -35,7 +35,7 @@ public interface IResultRepository
 		where T : SchoolOlympiadResultBase;
 
 	/// <summary>
-	/// Возвращает 
+	/// Возвращает
 	/// </summary>
 	/// <param name="cancellationToken"><see cref="CancellationToken" />.</param>
 	/// <returns></returns>

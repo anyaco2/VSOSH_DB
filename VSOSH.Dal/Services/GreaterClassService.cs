@@ -28,7 +28,7 @@ public class GreaterClassService : IGreaterClassService
 	#region IGreaterClassService members
 	public async Task<FileStream> GetGreaterClass(CancellationToken cancellationToken = default)
 	{
-		var pathToFile = Path.Combine(ProfileLocationStorage.ServiceFiles, $"За_более_старший_класс.xlsx");
+		var pathToFile = Path.Combine(ProfileLocationStorage.ServiceFiles, "За_более_старший_класс.xlsx");
 
 		var results = await _resultRepository.FindRangeAsync<SchoolOlympiadResultBase>(r => r.CurrentCompeting.HasValue, cancellationToken);
 

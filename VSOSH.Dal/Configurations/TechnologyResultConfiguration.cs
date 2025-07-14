@@ -9,11 +9,13 @@ namespace VSOSH.Dal.Configurations;
 /// </summary>
 public class TechnologyResultConfiguration : IEntityTypeConfiguration<TechnologyResult>
 {
-    public void Configure(EntityTypeBuilder<TechnologyResult> builder)
-    {
-        builder.ToTable("TechnologyResult");
+	#region IEntityTypeConfiguration<TechnologyResult> members
+	public void Configure(EntityTypeBuilder<TechnologyResult> builder)
+	{
+		builder.ToTable("TechnologyResult");
 
-        builder.Property(t => t.DirectionPractice)
-            .HasColumnName("DirectionPractice");
-    }
+		builder.Property(t => t.DirectionPractice)
+			   .HasColumnName("DirectionPractice");
+	}
+	#endregion
 }

@@ -2,5 +2,7 @@
 
 public interface IGreaterClassService
 {
-    Task<FileStream> GetGreaterClass(CancellationToken cancellationToken = default);
+	#region Overridable
+	Task<FileStream> GetGreaterClass(CancellationToken cancellationToken = default);
+	#endregion
 }

@@ -2,5 +2,7 @@
 
 public interface IPassingPointsService
 {
-    Task<FileStream> GetPassingPoints(Subject subject, CancellationToken cancellationToken = default);
+	#region Overridable
+	Task<FileStream> GetPassingPoints(Subject subject, CancellationToken cancellationToken = default);
+	#endregion
 }

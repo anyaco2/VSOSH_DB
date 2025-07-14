@@ -1,19 +1,25 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net8.0-windows</TargetFramework>
-    <OutputType>WinExe</OutputType>
-      <LangVersion>12</LangVersion>
-      <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-      <UseWindowsForms>true</UseWindowsForms>
-      <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
-  </PropertyGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\VSOSH.Dal\VSOSH.Dal.csproj" />
-    <ProjectReference Include="..\VSOSH.Domain\VSOSH.Domain.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.2" />
-      <PackageReference Include="Serilog.Settings.Configuration" Version="9.0.0"/>
-      <PackageReference Include="Serilog.Sinks.File" Version="7.0.0"/>
-  </ItemGroup>
+    <PropertyGroup>
+        <TargetFramework>net8.0-windows</TargetFramework>
+        <OutputType>WinExe</OutputType>
+        <LangVersion>12</LangVersion>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <UseWindowsForms>true</UseWindowsForms>
+        <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
+        <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\VSOSH.Dal\VSOSH.Dal.csproj"/>
+        <ProjectReference Include="..\VSOSH.Domain\VSOSH.Domain.csproj"/>
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.2"/>
+        <PackageReference Include="Serilog.Settings.Configuration" Version="9.0.0"/>
+        <PackageReference Include="Serilog.Sinks.File" Version="7.0.0"/>
+    </ItemGroup>
+    <ItemGroup>
+        <Compile Update="Protocols.cs">
+            <SubType>Form</SubType>
+        </Compile>
+    </ItemGroup>
 </Project>

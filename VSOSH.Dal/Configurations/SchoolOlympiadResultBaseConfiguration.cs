@@ -11,36 +11,42 @@ namespace VSOSH.Dal.Configurations;
 /// </summary>
 public class SchoolOlympiadResultBaseConfiguration : IEntityTypeConfiguration<SchoolOlympiadResultBase>
 {
-    public void Configure(EntityTypeBuilder<SchoolOlympiadResultBase> builder)
-    {
-        builder.ToTable("SchoolOlympiadResultBase");
-        builder.HasKey(s => s.Id);
+	#region IEntityTypeConfiguration<SchoolOlympiadResultBase> members
+	public void Configure(EntityTypeBuilder<SchoolOlympiadResultBase> builder)
+	{
+		builder.ToTable("SchoolOlympiadResultBase");
+		builder.HasKey(s => s.Id);
 
-        builder.Property(s => s.Id)
-            .ValueGeneratedNever();
+		builder.Property(s => s.Id)
+			   .ValueGeneratedNever();
 
-        builder.ComplexProperty(s => s.StudentName, propertyBuilder =>
-        {
-            propertyBuilder.Property(s => s.FirstName)
-                .HasColumnName("FirstName");
-            propertyBuilder.Property(s => s.LastName)
-                .HasColumnName("LastName");
-            propertyBuilder.Property(s => s.MiddleName)
-                .HasColumnName("MiddleName");
-        });
+		builder.ComplexProperty(s => s.StudentName,
+								propertyBuilder =>
+								{
+									propertyBuilder.Property(s => s.FirstName)
+												   .HasColumnName("FirstName");
+									propertyBuilder.Property(s => s.LastName)
+												   .HasColumnName("LastName");
+									propertyBuilder.Property(s => s.MiddleName)
+												   .HasColumnName("MiddleName");
+								});
 
-        builder.Property(s => s.Percentage)
-            .HasColumnName("Percentage");
-        builder.Property(s => s.Status)
-            .HasConversion<EnumToStringConverter<Status>>()
-            .HasColumnName("Status");
-        builder.Property(s => s.CurrentCompeting)
-            .HasColumnName("CurrentGrade");
-        builder.Property(s => s.GradeCompeting)
-            .HasColumnName("GradeCompeting");
-        builder.Property(s => s.School)
-            .HasColumnName("School");
-        builder.Property(s => s.ParticipantCode)
-            .HasColumnName("ParticipantCode");
-    }
+		builder.Property(s => s.Percentage)
+			   .HasColumnName("Percentage");
+		builder.Property(s => s.Status)
+			   .HasConversion<EnumToStringConverter<Status>>()
+			   .HasColumnName("Status");
+		builder.Property(s => s.CurrentCompeting)
+			   .HasColumnName("CurrentGrade");
+		builder.Property(s => s.GradeCompeting)
+			   .HasColumnName("GradeCompeting");
+		builder.Property(s => s.School)
+			   .HasColumnName("School");
+		builder.Property(s => s.ParticipantCode)
+			   .HasColumnName("ParticipantCode");
+		builder.HasOne<Protocol>()
+			   .WithMany()
+			   .HasForeignKey(s => s.ProtocolId);
+	}
+	#endregion
 }

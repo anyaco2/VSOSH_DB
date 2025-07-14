@@ -59,16 +59,16 @@ public static class ServiceProviderFactory
 		}
 
 		var builder = new ConfigurationBuilder().SetBasePath(ProfileLocationStorage.ConfigDirPath)
-												.AddJsonFile(ProfileLocationStorage.ConfigFileName, optional: false, reloadOnChange: true);
+												.AddJsonFile(ProfileLocationStorage.ConfigFileName, false, true);
 		Configuration = builder.Build();
-		
-		services.AddSingleton(Configuration);
 
+		services.AddSingleton(Configuration);
 
 		services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("Database")));
 
 		services.AddScoped<IParser, ResultParser>();
 		services.AddScoped<IResultRepository, ResultRepository>();
+		services.AddScoped<IProtocolRepository, ProtocolRepository>();
 		services.AddScoped<IPassingPointsService, PassingPointsService>();
 		services.AddScoped<IGeneralReportService, GeneralReportService>();
 		services.AddScoped<IQuantitativeDataService, QuantitativeDataService>();
@@ -86,7 +86,9 @@ public static class ServiceProviderFactory
 
 		return services.BuildServiceProvider();
 	}
+	#endregion
 
+	#region Private
 	private static LoggerConfiguration GetBaseLoggerConfig()
 	{
 		var path = ProfileLocationStorage.LogDirPath;

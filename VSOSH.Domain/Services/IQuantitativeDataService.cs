@@ -5,10 +5,12 @@
 /// </summary>
 public interface IQuantitativeDataService
 {
-    /// <summary>
-    /// Возввращает количественные данные excel-файлом.
-    /// </summary>
-    /// <param name="cancellationToken"><see cref="CancellationToken" />.</param>
-    /// <returns>Количественные данные excel-файлом.</returns>
-    Task<FileStream> GetQuantitativeData(CancellationToken cancellationToken = default);
+	#region Overridable
+	/// <summary>
+	/// Возввращает количественные данные excel-файлом.
+	/// </summary>
+	/// <param name="cancellationToken"><see cref="CancellationToken" />.</param>
+	/// <returns>Количественные данные excel-файлом.</returns>
+	Task<FileStream> GetQuantitativeData(CancellationToken cancellationToken = default);
+	#endregion
 }

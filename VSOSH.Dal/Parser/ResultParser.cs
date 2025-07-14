@@ -17,6 +17,7 @@ public class ResultParser : IParser
 	#endregion
 
 	#region Fields
+	private readonly IProtocolRepository _protocolRepository;
 	private readonly IResultRepository _resultRepository;
 	#endregion
 	#endregion
@@ -26,17 +27,19 @@ public class ResultParser : IParser
 	/// Инициализирует экземпляр <see cref="ResultParser" />.
 	/// </summary>
 	/// <param name="resultRepository"><see cref="IResultRepository" />.</param>
+	/// <param name="protocolRepository"><see cref="IProtocolRepository" />.</param>
 	/// <exception cref="ArgumentNullException">Если один из аргументов не задан.</exception>
-	public ResultParser(IResultRepository resultRepository)
+	public ResultParser(IResultRepository resultRepository, IProtocolRepository protocolRepository)
 	{
 		_resultRepository = resultRepository ?? throw new ArgumentNullException(nameof(resultRepository));
+		_protocolRepository = protocolRepository ?? throw new ArgumentNullException(nameof(protocolRepository));
 		ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 	}
 	#endregion
 
 	#region IParser members
 	/// <inheritdoc />
-	public async Task ParseAndSaveAsync(Stream file, CancellationToken cancellationToken = default)
+	public async Task ParseAndSaveAsync(FileStream file, CancellationToken cancellationToken = default)
 	{
 		List<ExcelWorksheet> worksheets;
 		using var package = new ExcelPackage(file);
@@ -50,23 +53,26 @@ public class ResultParser : IParser
 			throw;
 		}
 
-		var olympiadResultBases = ParseData(worksheets);
+		var fileInfo = new FileInfo(file.Name);
+		var protocol = new Protocol(Guid.NewGuid(), fileInfo.Name);
+		_protocolRepository.Add(protocol);
+		var olympiadResultBases = ParseData(worksheets, protocol);
 		_resultRepository.AddRange(olympiadResultBases);
 
 		try
 		{
 			await _resultRepository.SaveChangesAsync(cancellationToken);
-			Log.Information($"Данные из протокола {package.File.Name} успешно добавлены.");
+			Log.Information($"Данные из протокола {fileInfo.Name} успешно добавлены.");
 		}
 		catch (Exception ex)
 		{
-			Log.Error($"Произошла ошибка при добавлении данных из протокола {package.File.Name} в базу данных. {ex.Message}", ex);
+			Log.Error($"Произошла ошибка при добавлении данных из протокола {fileInfo.Name} в базу данных. {ex.Message}", ex);
 		}
 	}
 	#endregion
 
 	#region Private
-	private SchoolOlympiadResultBase CreateOlympiadResult(string nameSubject, ExcelWorksheet worksheet, int row)
+	private SchoolOlympiadResultBase CreateOlympiadResult(string nameSubject, ExcelWorksheet worksheet, int row, Protocol protocol)
 	{
 		ResultBase? result = null;
 		if (nameSubject != "труды" && nameSubject != "физическая культура")
@@ -77,6 +83,7 @@ public class ResultParser : IParser
 		return nameSubject switch
 		{
 			"математика" => new MathResult(result!.Id,
+										   protocol.Id,
 										   result.School,
 										   result.ParticipantCode,
 										   result.StudentName,
@@ -86,6 +93,7 @@ public class ResultParser : IParser
 										   result.GradeCompeting,
 										   result.CurrentCompeting),
 			"русский язык" => new RussianResult(result!.Id,
+												protocol.Id,
 												result.School,
 												result.ParticipantCode,
 												result.StudentName,
@@ -95,6 +103,7 @@ public class ResultParser : IParser
 												result.GradeCompeting,
 												result.CurrentCompeting),
 			"география" => new GeographyResult(result!.Id,
+											   protocol.Id,
 											   result.School,
 											   result.ParticipantCode,
 											   result.StudentName,
@@ -104,6 +113,7 @@ public class ResultParser : IParser
 											   result.GradeCompeting,
 											   result.CurrentCompeting),
 			"литература" => new LiteratureResult(result!.Id,
+												 protocol.Id,
 												 result.School,
 												 result.ParticipantCode,
 												 result.StudentName,
@@ -113,6 +123,7 @@ public class ResultParser : IParser
 												 result.GradeCompeting,
 												 result.CurrentCompeting),
 			"английский язык" => new EnglishResult(result!.Id,
+												   protocol.Id,
 												   result.School,
 												   result.ParticipantCode,
 												   result.StudentName,
@@ -122,6 +133,7 @@ public class ResultParser : IParser
 												   result.GradeCompeting,
 												   result.CurrentCompeting),
 			"основы безопасности и защиты родины" => new FundamentalsLifeSafetyResult(result!.Id,
+																					  protocol.Id,
 																					  result.School,
 																					  result.ParticipantCode,
 																					  result.StudentName,
@@ -130,9 +142,10 @@ public class ResultParser : IParser
 																					  result.FinalScore,
 																					  result.GradeCompeting,
 																					  result.CurrentCompeting),
-			"труды" => CreateTechnologyResult(worksheet, row),
-			"физическая культура" => CreatePhysicalEducationResult(worksheet, row),
+			"труды" => CreateTechnologyResult(worksheet, row, protocol),
+			"физическая культура" => CreatePhysicalEducationResult(worksheet, row, protocol),
 			"китайский язык" => new ChineseResult(result!.Id,
+												  protocol.Id,
 												  result.School,
 												  result.ParticipantCode,
 												  result.StudentName,
@@ -142,6 +155,7 @@ public class ResultParser : IParser
 												  result.GradeCompeting,
 												  result.CurrentCompeting),
 			"немецкий язык" => new GermanResult(result!.Id,
+												protocol.Id,
 												result.School,
 												result.ParticipantCode,
 												result.StudentName,
@@ -151,6 +165,7 @@ public class ResultParser : IParser
 												result.GradeCompeting,
 												result.CurrentCompeting),
 			"астрономия" => new AstronomyResult(result!.Id,
+												protocol.Id,
 												result.School,
 												result.ParticipantCode,
 												result.StudentName,
@@ -160,6 +175,7 @@ public class ResultParser : IParser
 												result.GradeCompeting,
 												result.CurrentCompeting),
 			"биология" => new BiologyResult(result!.Id,
+											protocol.Id,
 											result.School,
 											result.ParticipantCode,
 											result.StudentName,
@@ -169,6 +185,7 @@ public class ResultParser : IParser
 											result.GradeCompeting,
 											result.CurrentCompeting),
 			"информатика" => new ComputerScienceResult(result!.Id,
+													   protocol.Id,
 													   result.School,
 													   result.ParticipantCode,
 													   result.StudentName,
@@ -178,6 +195,7 @@ public class ResultParser : IParser
 													   result.GradeCompeting,
 													   result.CurrentCompeting),
 			"история" => new HistoryResult(result!.Id,
+										   protocol.Id,
 										   result.School,
 										   result.ParticipantCode,
 										   result.StudentName,
@@ -187,6 +205,7 @@ public class ResultParser : IParser
 										   result.GradeCompeting,
 										   result.CurrentCompeting),
 			"искусство (мхк)" => new ArtResult(result!.Id,
+											   protocol.Id,
 											   result.School,
 											   result.ParticipantCode,
 											   result.StudentName,
@@ -196,6 +215,7 @@ public class ResultParser : IParser
 											   result.GradeCompeting,
 											   result.CurrentCompeting),
 			"обществознание" => new SocialStudiesResult(result!.Id,
+														protocol.Id,
 														result.School,
 														result.ParticipantCode,
 														result.StudentName,
@@ -205,6 +225,7 @@ public class ResultParser : IParser
 														result.GradeCompeting,
 														result.CurrentCompeting),
 			"право" => new LawResult(result!.Id,
+									 protocol.Id,
 									 result.School,
 									 result.ParticipantCode,
 									 result.StudentName,
@@ -214,6 +235,7 @@ public class ResultParser : IParser
 									 result.GradeCompeting,
 									 result.CurrentCompeting),
 			"физика" => new PhysicResult(result!.Id,
+										 protocol.Id,
 										 result.School,
 										 result.ParticipantCode,
 										 result.StudentName,
@@ -223,6 +245,7 @@ public class ResultParser : IParser
 										 result.GradeCompeting,
 										 result.CurrentCompeting),
 			"французский язык" => new FrenchResult(result!.Id,
+												   protocol.Id,
 												   result.School,
 												   result.ParticipantCode,
 												   result.StudentName,
@@ -232,6 +255,7 @@ public class ResultParser : IParser
 												   result.GradeCompeting,
 												   result.CurrentCompeting),
 			"экология" => new EcologyResult(result!.Id,
+											protocol.Id,
 											result.School,
 											result.ParticipantCode,
 											result.StudentName,
@@ -241,6 +265,7 @@ public class ResultParser : IParser
 											result.GradeCompeting,
 											result.CurrentCompeting),
 			"экономика" => new EconomyResult(result!.Id,
+											 protocol.Id,
 											 result.School,
 											 result.ParticipantCode,
 											 result.StudentName,
@@ -250,6 +275,7 @@ public class ResultParser : IParser
 											 result.GradeCompeting,
 											 result.CurrentCompeting),
 			"химия" => new ChemistryResult(result!.Id,
+										   protocol.Id,
 										   result.School,
 										   result.ParticipantCode,
 										   result.StudentName,
@@ -258,11 +284,11 @@ public class ResultParser : IParser
 										   result.FinalScore,
 										   result.GradeCompeting,
 										   result.CurrentCompeting),
-			_ => throw new ArgumentException($"Неизвестный дисциплина {nameSubject}.")
+			_ => throw new ArgumentException($"Неизвестная дисциплина {nameSubject}.")
 		};
 	}
 
-	private PhysicalEducationResult CreatePhysicalEducationResult(ExcelWorksheet worksheet, int row)
+	private PhysicalEducationResult CreatePhysicalEducationResult(ExcelWorksheet worksheet, int row, Protocol protocol)
 	{
 		var school = worksheet.Cells[row, ExcelResultInfo.ColumnWithSchoolName]
 							  .GetValue<string>();
@@ -309,6 +335,7 @@ public class ResultParser : IParser
 		var sex = GetSex(worksheet.Cells[row, ExcelResultInfo.ColumnWithSexStudent]
 								  .GetValue<string>());
 		return new PhysicalEducationResult(Guid.NewGuid(),
+										   protocol.Id,
 										   school,
 										   participantCode,
 										   student,
@@ -359,7 +386,7 @@ public class ResultParser : IParser
 		return new ResultBase(Guid.NewGuid(), school, participantCode, student, status, percentage, finalScore, gradeCompeting, currentGrade);
 	}
 
-	private TechnologyResult CreateTechnologyResult(ExcelWorksheet worksheet, int row)
+	private TechnologyResult CreateTechnologyResult(ExcelWorksheet worksheet, int row, Protocol protocol)
 	{
 		var school = worksheet.Cells[row, ExcelResultInfo.ColumnWithSchoolName]
 							  .GetValue<string>();
@@ -393,7 +420,7 @@ public class ResultParser : IParser
 										.GetValue<string>());
 		var directionPractise = worksheet.Cells[row, ExcelResultInfo.ColumnWithDirectionPractice]
 										 .GetValue<string>();
-		return new TechnologyResult(Guid.NewGuid(), school, participantCode, student, status, percentage, finalScore, gradeCompeting, currentGrade, directionPractise);
+		return new TechnologyResult(Guid.NewGuid(), protocol.Id, school, participantCode, student, status, percentage, finalScore, gradeCompeting, currentGrade, directionPractise);
 	}
 
 	private Sex GetSex(string sex)
@@ -417,7 +444,7 @@ public class ResultParser : IParser
 		};
 	}
 
-	private IReadOnlyCollection<SchoolOlympiadResultBase> ParseData(List<ExcelWorksheet> worksheets)
+	private IReadOnlyCollection<SchoolOlympiadResultBase> ParseData(List<ExcelWorksheet> worksheets, Protocol protocol)
 	{
 		List<SchoolOlympiadResultBase> olympiadResultBases = [];
 		foreach (var worksheet in worksheets.Where(worksheet => worksheet.Name is not ("Инструкция" or "Правила")))
@@ -440,7 +467,7 @@ public class ResultParser : IParser
 			{
 				try
 				{
-					olympiadResultBases.Add(CreateOlympiadResult(nameSubject.ToLower(), worksheet, row));
+					olympiadResultBases.Add(CreateOlympiadResult(nameSubject.ToLower(), worksheet, row, protocol));
 					row++;
 				}
 				catch (Exception ex)

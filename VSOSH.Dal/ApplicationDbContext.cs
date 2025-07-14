@@ -17,17 +17,11 @@ public class ApplicationDbContext : DbContext
 	#endregion
 
 	#region .ctor
-	/// <summary>Инициализирует тип <see cref="ApplicationDbContext"/>.</summary>
-	static ApplicationDbContext()
-	{
-		DefaultConnectionString = null;
-	}
+	/// <summary>Инициализирует тип <see cref="ApplicationDbContext" />.</summary>
+	static ApplicationDbContext() => DefaultConnectionString = null;
 
-	/// <summary>Создаёт экземпляр <see cref="ApplicationDbContext"/>.</summary>
-	public ApplicationDbContext()
-	{
-		_connectionString = DefaultConnectionString;
-	}
+	/// <summary>Создаёт экземпляр <see cref="ApplicationDbContext" />.</summary>
+	public ApplicationDbContext() => _connectionString = DefaultConnectionString;
 
 	/// <summary>
 	/// Инициализирует новый экземпляр типа <see cref="ApplicationDbContext" />.
@@ -54,7 +48,7 @@ public class ApplicationDbContext : DbContext
 	#endregion
 
 	#region Overrided
-	/// <inheritdoc/>
+	/// <inheritdoc />
 	protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 	{
 		ArgumentNullException.ThrowIfNull(nameof(optionsBuilder));
@@ -62,7 +56,9 @@ public class ApplicationDbContext : DbContext
 		base.OnConfiguring(optionsBuilder);
 
 		if (optionsBuilder.IsConfigured)
+		{
 			return;
+		}
 
 		optionsBuilder.EnableSensitiveDataLogging();
 

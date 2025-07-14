@@ -54,18 +54,16 @@ public class QuantitativeDataService : IQuantitativeDataService
 	#region IQuantitativeDataService members
 	public async Task<FileStream> GetQuantitativeData(CancellationToken cancellationToken = default)
 	{
-		var pathToFile = Path.Combine(ProfileLocationStorage.ServiceFiles, $"Количественные_данные.xlsx");
+		var pathToFile = Path.Combine(ProfileLocationStorage.ServiceFiles, "Количественные_данные.xlsx");
 
 		await InitialData(cancellationToken);
 
-		using (var excelPackage = new ExcelPackage())
-		{
-			SetValueInExcel(excelPackage, Status.Participant, "Количество участников");
-			SetValueInExcel(excelPackage, Status.Winner, "Количество победителей");
-			SetValueInExcel(excelPackage, Status.Awardee, "Количество призеров");
+		using var excelPackage = new ExcelPackage();
+		SetValueInExcel(excelPackage, Status.Participant, "Количество участников");
+		SetValueInExcel(excelPackage, Status.Winner, "Количество победителей");
+		SetValueInExcel(excelPackage, Status.Awardee, "Количество призеров");
 
-			await excelPackage.SaveAsAsync(new FileInfo(pathToFile), cancellationToken);
-		}
+		await excelPackage.SaveAsAsync(new FileInfo(pathToFile), cancellationToken);
 
 		return new FileStream(pathToFile, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Read);
 	}

@@ -7,26 +7,42 @@ namespace VSOSH.Domain.ValueObjects;
 /// </summary>
 public class StudentName : ValueObject
 {
-    /// <summary>
-    /// Возвращает имя ученика.
-    /// </summary>
-    public required string FirstName { get; init; }
-    
-    /// <summary>
-    /// Возвращает фамилию ученика.
-    /// </summary>
-    public required string LastName { get; init; }
-    
-    /// <summary>
-    /// Возвращает отчество ученика.
-    /// </summary>
-    public string? MiddleName { get; init; }
-    
-    /// <inheritdoc />
-    protected override IEnumerable<object?> GetEqualityComponents()
-    {
-        yield return FirstName;
-        yield return LastName;
-        yield return MiddleName;
-    }
+	#region Properties
+	/// <summary>
+	/// Возвращает имя ученика.
+	/// </summary>
+	public required string FirstName
+	{
+		get;
+		init;
+	}
+
+	/// <summary>
+	/// Возвращает фамилию ученика.
+	/// </summary>
+	public required string LastName
+	{
+		get;
+		init;
+	}
+
+	/// <summary>
+	/// Возвращает отчество ученика.
+	/// </summary>
+	public string? MiddleName
+	{
+		get;
+		init;
+	}
+	#endregion
+
+	#region Overrided
+	/// <inheritdoc />
+	protected override IEnumerable<object?> GetEqualityComponents()
+	{
+		yield return FirstName;
+		yield return LastName;
+		yield return MiddleName;
+	}
+	#endregion
 }

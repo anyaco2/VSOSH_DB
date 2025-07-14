@@ -62,11 +62,9 @@ public class ResultRepository(ApplicationDbContext dbContext) : IResultRepositor
 	}
 
 	/// <inheritdoc />
-	public async Task<GeneralReport?> GetGeneralReport(CancellationToken cancellationToken = default)
-	{
-		return await _dbContext.Set<GeneralReport>()
-							   .FirstOrDefaultAsync(cancellationToken);
-	}
+	public async Task<GeneralReport?> GetGeneralReport(CancellationToken cancellationToken = default) =>
+		await _dbContext.Set<GeneralReport>()
+						.FirstOrDefaultAsync(cancellationToken);
 
 	public Task SaveChangesAsync(CancellationToken cancellationToken = default) => _dbContext.SaveChangesAsync(cancellationToken);
 	#endregion

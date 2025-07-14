@@ -11,10 +11,10 @@
 /// <param name="UniquePrizeWinners">Кол-во уникальных призеров.</param>
 /// <param name="UniqueWinnersAndPrizeWinners">Сумма уникальных призеров и победителей.</param>
 public record GeneralReport(
-    int TotalCount,
-    int UniqueParticipants,
-    int TotalWinnerDiplomas,
-    int UniqueWinners,
-    int TotalPrizeDiplomas,
-    int UniquePrizeWinners,
-    int UniqueWinnersAndPrizeWinners);
+	int TotalCount,
+	int UniqueParticipants,
+	int TotalWinnerDiplomas,
+	int UniqueWinners,
+	int TotalPrizeDiplomas,
+	int UniquePrizeWinners,
+	int UniqueWinnersAndPrizeWinners);

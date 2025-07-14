@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using VSOSH.Domain;
+using VSOSH.Domain.Repositories;
 using VSOSH.Domain.Services;
 
 namespace VSOSH.UI;
@@ -15,6 +16,7 @@ public partial class MainWindow : Form
 	private readonly IGreaterClassService _greaterClassService;
 	private readonly IParser _parser;
 	private readonly IPassingPointsService _passingPointsService;
+	private readonly IProtocolRepository _protocolRepository;
 	private readonly IQuantitativeDataService _quantitativeDataService;
 	#endregion
 	#endregion
@@ -24,18 +26,26 @@ public partial class MainWindow : Form
 					  IGeneralReportService generalReportService,
 					  IGreaterClassService greaterClassService,
 					  IPassingPointsService passingPointsService,
-					  IQuantitativeDataService quantitativeDataService)
+					  IQuantitativeDataService quantitativeDataService,
+					  IProtocolRepository protocolRepository)
 	{
+		InitializeComponent();
 		_parser = parser;
 		_generalReportService = generalReportService;
 		_greaterClassService = greaterClassService;
 		_passingPointsService = passingPointsService;
 		_quantitativeDataService = quantitativeDataService;
-		InitializeComponent();
+		_protocolRepository = protocolRepository;
 	}
 	#endregion
 
 	#region Private
+	private void button1_Click(object sender, EventArgs e)
+	{
+		var protocols = new Protocols(_protocolRepository);
+		protocols.Show();
+	}
+
 	//вызов
 	private async void button3_ClickAsync(object sender, EventArgs e)
 	{
@@ -108,20 +118,24 @@ public partial class MainWindow : Form
 			InitialDirectory = @"C:\",
 			Filter = @"Microsoft Excel (*.xls*)|*.xls*",
 			FilterIndex = 2,
-			RestoreDirectory = true
+			RestoreDirectory = true,
+			Multiselect = true
 		};
 
 		if (fileDialog1.ShowDialog() == DialogResult.OK)
 		{
-			var excelFileName = fileDialog1.FileName;
-			try
+			var excelFileNames = fileDialog1.FileNames;
+			foreach (var excelFileName in excelFileNames)
 			{
-				await _parser.ParseAndSaveAsync(new FileStream(excelFileName, FileMode.Open));
-				MessageBox.Show(@"Данные успешно добавлены.");
-			}
-			catch (Exception)
-			{
-				MessageBox.Show(@"Что-то пошло не так.");
+				try
+				{
+					await _parser.ParseAndSaveAsync(new FileStream(excelFileName, FileMode.Open));
+					MessageBox.Show($@"Данные файла {excelFileName} успешно добавлены.");
+				}
+				catch (Exception)
+				{
+					MessageBox.Show($@"Что-то пошло не так у файла {excelFileName}.");
+				}
 			}
 		}
 	}
@@ -129,7 +143,6 @@ public partial class MainWindow : Form
 	private async Task GeneralReportAsync()
 	{
 		await using var fileStream = await _generalReportService.GetGeneralReport();
-		saveFileDialog1.ShowDialog();
 		saveFileDialog1.Title = @"Save";
 		saveFileDialog1.Filter = @"Microsoft Excel (*.xls*)|*.xls*";
 		if (saveFileDialog1.ShowDialog() == DialogResult.OK)
@@ -150,7 +163,6 @@ public partial class MainWindow : Form
 	private async Task GetGreaterClassDataAsync()
 	{
 		await using var fileStream = await _greaterClassService.GetGreaterClass();
-		saveFileDialog1.ShowDialog();
 		saveFileDialog1.Title = @"Save";
 		saveFileDialog1.Filter = @"Microsoft Excel (*.xls*)|*.xls*";
 		if (saveFileDialog1.ShowDialog() == DialogResult.OK)
@@ -171,7 +183,6 @@ public partial class MainWindow : Form
 	private async Task GetQuantitativeDataAsync()
 	{
 		await using var fileStream = await _quantitativeDataService.GetQuantitativeData();
-		saveFileDialog1.ShowDialog();
 		saveFileDialog1.Title = @"Save";
 		saveFileDialog1.Filter = @"Microsoft Excel (*.xls*)|*.xls*";
 		if (saveFileDialog1.ShowDialog() == DialogResult.OK)

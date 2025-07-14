@@ -30,7 +30,7 @@ public class GeneralReportService : IGeneralReportService
 	#region IGeneralReportService members
 	public async Task<FileStream> GetGeneralReport(CancellationToken cancellationToken = default)
 	{
-		var pathToFile = Path.Combine(ProfileLocationStorage.ServiceFiles, $"Общий_отчет.xlsx");
+		var pathToFile = Path.Combine(ProfileLocationStorage.ServiceFiles, "Общий_отчет.xlsx");
 
 		var generalReport = await _resultRepository.GetGeneralReport(cancellationToken);
 		if (generalReport is null)
