@@ -127,6 +127,7 @@ public class PassingPointsService : IPassingPointsService
 		worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithSchoolName].Value = result.School;
 		worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithLastName].Value = result.StudentName.LastName;
 		worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithFirstName].Value = result.StudentName.FirstName;
+		worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithMiddleName].Value = result.StudentName.MiddleName;
 		worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithGradeCompeting.Base].Value = result.GradeCompeting;
 		worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithPercentage.Base].Value = result.Percentage;
 		worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithFinalScore.Base].Value = result.FinalScore;
@@ -138,6 +139,7 @@ public class PassingPointsService : IPassingPointsService
 		worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithSchoolName].Value = result.School;
 		worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithLastName].Value = result.StudentName.LastName;
 		worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithFirstName].Value = result.StudentName.FirstName;
+		worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithMiddleName].Value = result.StudentName.MiddleName;
 		worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithSex].Value = result.Sex.GetString();
 		worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithGradeCompeting.Pe].Value = result.GradeCompeting;
 		worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithPercentage.TechnologyOrPe].Value = result.Percentage;
@@ -150,6 +152,7 @@ public class PassingPointsService : IPassingPointsService
 		worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithSchoolName].Value = result.School;
 		worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithLastName].Value = result.StudentName.LastName;
 		worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithFirstName].Value = result.StudentName.FirstName;
+		worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithMiddleName].Value = result.StudentName.MiddleName;
 		worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithGradeCompeting.Base].Value = result.GradeCompeting;
 		worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithPractice].Value = result.DirectionPractice;
 		worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithPercentage.TechnologyOrPe].Value = result.Percentage;
@@ -178,6 +181,7 @@ public class PassingPointsService : IPassingPointsService
 		worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithSchoolName].Value = "ОУ";
 		worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithLastName].Value = "Фамилия";
 		worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithFirstName].Value = "Имя";
+		worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithMiddleName].Value = "Отчество";
 		worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithGradeCompeting.Base].Value = "Класс, за который выступает";
 		worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithPercentage.Base].Value = "%";
 		worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithFinalScore.Base].Value = "Итоговый балл";
@@ -191,6 +195,7 @@ public class PassingPointsService : IPassingPointsService
 		worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithSchoolName].Value = "ОУ";
 		worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithLastName].Value = "Фамилия";
 		worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithFirstName].Value = "Имя";
+		worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithMiddleName].Value = "Отчество";
 		worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithSex].Value = "Пол";
 		worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithGradeCompeting.Pe].Value = "Класс, за который выступает";
 		worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithPercentage.TechnologyOrPe].Value = "%";
@@ -205,6 +210,7 @@ public class PassingPointsService : IPassingPointsService
 		worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithSchoolName].Value = "ОУ";
 		worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithLastName].Value = "Фамилия";
 		worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithFirstName].Value = "Имя";
+		worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithMiddleName].Value = "Отчество";
 		worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithGradeCompeting.Base].Value = "Класс, за который выступает";
 		worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithPractice].Value = "Направление практики";
 		worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithPercentage.TechnologyOrPe].Value = "%";

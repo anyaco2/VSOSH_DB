@@ -16,11 +16,16 @@ public static class ExcelPassingPointsInfo
 	/// Возвращает номер столбца с фамилией ученика.
 	/// </summary>
 	public const int ColumnWithLastName = 2; // B
+	
+	/// <summary>
+	/// Возвращает номер столбца с отчеством ученика.
+	/// </summary>
+	public const int ColumnWithMiddleName = 4; // D
 
 	/// <summary>
 	/// Возвращает номер столбца с направлением практики.
 	/// </summary>
-	public const int ColumnWithPractice = 5; // E
+	public const int ColumnWithPractice = 6; // E
 	/// <summary>
 	/// Возвращает номер столбца с наименованием школы.
 	/// </summary>
@@ -29,29 +34,29 @@ public static class ExcelPassingPointsInfo
 	/// <summary>
 	/// Возвращает номер столбца с полом ученика.
 	/// </summary>
-	public const int ColumnWithSex = 4; // D
+	public const int ColumnWithSex = 5; // D
 	#endregion
 
 	#region Static
 	/// <summary>
 	/// Возвращает номера столбцов с итоговыми баллами.
 	/// </summary>
-	public static readonly (int Base, int TechnologyOrPe) ColumnWithFinalScore = (6, 7); // F/G
+	public static readonly (int Base, int TechnologyOrPe) ColumnWithFinalScore = (7, 8); // F/G
 
 	/// <summary>
 	/// Возвращает номера столбцов с классом, за который выступает ученик.
 	/// </summary>
-	public static readonly (int Base, int Pe) ColumnWithGradeCompeting = (4, 5); // D для базового, E для физры
+	public static readonly (int Base, int Pe) ColumnWithGradeCompeting = (5, 6); // D для базового, E для физры
 
 	/// <summary>
 	/// Возвращает номера столбцов с процентным выполнением.
 	/// </summary>
-	public static readonly (int Base, int TechnologyOrPe) ColumnWithPercentage = (5, 6); // E/F
+	public static readonly (int Base, int TechnologyOrPe) ColumnWithPercentage = (6, 7); // E/F
 
 	/// <summary>
 	/// Возвращает номера столбцов со статусом.
 	/// </summary>
-	public static readonly (int Base, int TechnologyOrPe) ColumnWithStatus = (7, 8); // G/H
+	public static readonly (int Base, int TechnologyOrPe) ColumnWithStatus = (8, 9); // G/H
 	#endregion
 	#endregion
 }
