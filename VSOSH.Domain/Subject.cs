@@ -11,6 +11,7 @@ public enum Subject
 	Ecology,
 	Economy,
 	English,
+	Spanish,
 	French,
 	FundamentalsLifeSafety,
 	Geography,
@@ -59,6 +60,7 @@ public static class SubjectExtension
 			Subject.Ecology => "экология",
 			Subject.Economy => "экономика",
 			Subject.Chemistry => "химия",
+			Subject.Spanish => "испанский_язык",
 			_ => throw new ArgumentOutOfRangeException(nameof(subject), subject, null)
 		};
 	#endregion

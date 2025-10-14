@@ -21,6 +21,7 @@ public class QuantitativeDataService : IQuantitativeDataService
 	private IReadOnlyCollection<BiologyResult>? _biologyResults;
 	private IReadOnlyCollection<ChemistryResult>? _chemistryResults;
 	private IReadOnlyCollection<ChineseResult>? _chineseResults;
+	private IReadOnlyCollection<SpanishResult>? _spanishResults;
 	private IReadOnlyCollection<ComputerScienceResult>? _computerScienceResults;
 	private IReadOnlyCollection<EcologyResult>? _ecologyResults;
 	private IReadOnlyCollection<EconomyResult>? _economyResults;
@@ -112,6 +113,7 @@ public class QuantitativeDataService : IQuantitativeDataService
 		_russianResults = await _resultRepository.FindRangeAsync<RussianResult>(cancellationToken: cancellationToken);
 		_socialStudiesResults = await _resultRepository.FindRangeAsync<SocialStudiesResult>(cancellationToken: cancellationToken);
 		_technologyResults = await _resultRepository.FindRangeAsync<TechnologyResult>(cancellationToken: cancellationToken);
+		_spanishResults = await _resultRepository.FindRangeAsync<SpanishResult>(cancellationToken: cancellationToken);
 	}
 
 	private void SetValueInExcel(ExcelPackage excelPackage, Status status, string sheetName)
@@ -142,6 +144,7 @@ public class QuantitativeDataService : IQuantitativeDataService
 		SetValues(worksheet, 21, _russianResults?.Where(r => r.Status == status), _russianResults?.Count > 0 ? null : Subject.Russian);
 		SetValues(worksheet, 22, _socialStudiesResults?.Where(r => r.Status == status), _socialStudiesResults?.Count > 0 ? null : Subject.SocialStudies);
 		SetValues(worksheet, 23, _technologyResults?.Where(r => r.Status == status), _technologyResults?.Count > 0 ? null : Subject.Technology);
+		SetValues(worksheet, 24, _spanishResults?.Where(r => r.Status == status), _spanishResults?.Count > 0 ? null : Subject.Spanish);
 		worksheet.Cells[worksheet.Dimension.Address]
 				 .AutoFitColumns();
 	}

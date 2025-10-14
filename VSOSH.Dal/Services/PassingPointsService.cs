@@ -255,6 +255,7 @@ public class PassingPointsService : IPassingPointsService
 			Subject.Russian => await _resultRepository.FindWithGroupByGradeCompeting<RussianResult>(cancellationToken),
 			Subject.SocialStudies => await _resultRepository.FindWithGroupByGradeCompeting<SocialStudiesResult>(cancellationToken),
 			Subject.Technology => await _resultRepository.FindWithGroupByGradeCompeting<TechnologyResult>(cancellationToken),
+			Subject.Spanish => await _resultRepository.FindWithGroupByGradeCompeting<SpanishResult>(cancellationToken),
 			_ => throw new ArgumentOutOfRangeException(nameof(subject), subject, null)
 		};
 	}

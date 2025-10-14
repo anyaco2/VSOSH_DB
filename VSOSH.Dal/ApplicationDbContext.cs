@@ -151,6 +151,10 @@ public class ApplicationDbContext : DbContext
 		modelBuilder.Entity<FundamentalsLifeSafetyResult>()
 					.ToTable("FundamentalsLifeSafetyResults")
 					.HasBaseType<SchoolOlympiadResultBase>();
+		
+		modelBuilder.Entity<SpanishResult>()
+					.ToTable("SpanishResults")
+					.HasBaseType<SchoolOlympiadResultBase>();
 	}
 	#endregion
 }
