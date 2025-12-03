@@ -155,6 +155,9 @@ public class ApplicationDbContext : DbContext
 		modelBuilder.Entity<SpanishResult>()
 					.ToTable("SpanishResults")
 					.HasBaseType<SchoolOlympiadResultBase>();
+		modelBuilder.Entity<ItalianResult>()
+					.ToTable("ItalianResults")
+					.HasBaseType<SchoolOlympiadResultBase>();
 	}
 	#endregion
 }

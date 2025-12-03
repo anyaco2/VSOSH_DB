@@ -24,7 +24,8 @@ public enum Subject
 	Physic,
 	Russian,
 	SocialStudies,
-	Technology
+	Technology,
+	Italian
 }
 
 public static class SubjectExtension
@@ -61,6 +62,7 @@ public static class SubjectExtension
 			Subject.Economy => "экономика",
 			Subject.Chemistry => "химия",
 			Subject.Spanish => "испанский_язык",
+			Subject.Italian => "итальянский_язык",
 			_ => throw new ArgumentOutOfRangeException(nameof(subject), subject, null)
 		};
 	#endregion

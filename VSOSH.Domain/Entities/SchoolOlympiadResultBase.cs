@@ -166,6 +166,8 @@ public abstract class SchoolOlympiadResultBase : Entity<Guid>
 			RussianResult => "русский язык",
 			SocialStudiesResult => "обществознание",
 			TechnologyResult => "труды",
+			SpanishResult => "испанский язык",
+			ItalianResult => "итальянский язык",
 			_ => throw new InvalidOperationException("Неизвестный тип результата")
 		};
 	#endregion

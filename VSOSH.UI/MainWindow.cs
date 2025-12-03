@@ -38,7 +38,7 @@ public partial class MainWindow : Form
 		_protocolRepository = protocolRepository;
 		comboBox1.Items.Clear();
 		comboBox1.Items.AddRange(
-			"астрономия, биология, география, информатика, искусство, история, испанский язык, китайский язык, литература, математика, основы безопасности и защиты родины, обществознание, право, русский язык, экономика, экология, химия, физика, французский язык, английский язык, немецкий язык, физическая культура, труды"
+			"астрономия, биология, география, информатика, искусство, история, испанский язык, итальянский язык, китайский язык, литература, математика, основы безопасности и защиты родины, обществознание, право, русский язык, экономика, экология, химия, физика, французский язык, английский язык, немецкий язык, физическая культура, труды"
 				.Split(", "));
 	}
 	#endregion
@@ -78,6 +78,7 @@ public partial class MainWindow : Form
 			"обществознание" => Subject.SocialStudies,
 			"труды" => Subject.Technology,
 			"испанский язык" => Subject.Spanish,
+			"итальянский язык" => Subject.Italian,
 			_ => throw new ArgumentOutOfRangeException()
 		};
 		await using var fileStream = await _passingPointsService.GetPassingPoints(subject);
