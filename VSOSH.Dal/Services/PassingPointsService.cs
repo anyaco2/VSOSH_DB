@@ -48,53 +48,15 @@ public class PassingPointsService : IPassingPointsService
 				throw new NotFoundException(message);
 			}
 
-			ExcelWorksheet? workSheet;
-			int row;
-
-			if (subject == Subject.PhysicalEducation)
+			foreach (var result in results)
 			{
-				var males = results.SelectMany(g => g.Select(s => s as PhysicalEducationResult)
-													 .Where(s => s.Sex == Sex.Male))
-								   .GroupBy(s => s.GradeCompeting);
-				var females = results.SelectMany(g => g.Select(s => s as PhysicalEducationResult)
-													   .Where(s => s.Sex == Sex.Female))
-									 .GroupBy(s => s.GradeCompeting);
-				foreach (var result in males)
+				var workSheet = excelPackage.Workbook.Worksheets.Add(result.Key.ToString());
+				CreateHeader(workSheet, subject);
+				var row = 2;
+				foreach (var resultBase in result.Select(s => s)
+												 .OrderByDescending(s => s.FinalScore))
 				{
-					workSheet = excelPackage.Workbook.Worksheets.Add($"{result.Key}М");
-					CreateHeader(workSheet, subject);
-					row = 2;
-					foreach (var resultBase in result.Where(s => s.GradeCompeting == result.Key)
-													 .OrderByDescending(s => s.FinalScore))
-					{
-						AddDataInWorkSheet(workSheet, row++, resultBase, subject);
-					}
-				}
-
-				foreach (var result in females)
-				{
-					workSheet = excelPackage.Workbook.Worksheets.Add($"{result.Key}Ж");
-					CreateHeader(workSheet, subject);
-					row = 2;
-					foreach (var resultBase in result.Where(s => s.GradeCompeting == result.Key)
-													 .OrderByDescending(s => s.FinalScore))
-					{
-						AddDataInWorkSheet(workSheet, row++, resultBase, subject);
-					}
-				}
-			}
-			else
-			{
-				foreach (var result in results)
-				{
-					workSheet = excelPackage.Workbook.Worksheets.Add(result.Key.ToString());
-					CreateHeader(workSheet, subject);
-					row = 2;
-					foreach (var resultBase in result.Select(s => s)
-													 .OrderByDescending(s => s.FinalScore))
-					{
-						AddDataInWorkSheet(workSheet, row++, resultBase, subject);
-					}
+					AddDataInWorkSheet(workSheet, row++, resultBase, subject);
 				}
 			}
 
@@ -111,10 +73,10 @@ public class PassingPointsService : IPassingPointsService
 		switch (subject)
 		{
 			case Subject.PhysicalEducation:
-				AddDataInWorkSheetPe(worksheet, row, result as PhysicalEducationResult);
+				AddDataInWorkSheetPe(worksheet, row, (result as PhysicalEducationResult)!);
 				break;
 			case Subject.Technology:
-				AddDataInWorkSheetTechnology(worksheet, row, result as TechnologyResult);
+				AddDataInWorkSheetTechnology(worksheet, row, (result as TechnologyResult)!);
 				break;
 			default:
 				AddDataInWorkSheetBase(worksheet, row, result);
@@ -129,6 +91,7 @@ public class PassingPointsService : IPassingPointsService
 		worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithFirstName].Value = result.StudentName.FirstName;
 		worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithMiddleName].Value = result.StudentName.MiddleName;
 		worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithGradeCompeting.Base].Value = result.GradeCompeting;
+		worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithCurrentCompeting.Base].Value = result.CurrentCompeting;
 		worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithPercentage.Base].Value = result.Percentage;
 		worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithFinalScore.Base].Value = result.FinalScore;
 		worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithStatus.Base].Value = result.Status.GetString();
@@ -142,6 +105,7 @@ public class PassingPointsService : IPassingPointsService
 		worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithMiddleName].Value = result.StudentName.MiddleName;
 		worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithSex].Value = result.Sex.GetString();
 		worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithGradeCompeting.Pe].Value = result.GradeCompeting;
+		worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithCurrentCompeting.Pe].Value = result.CurrentCompeting;
 		worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithPercentage.TechnologyOrPe].Value = result.Percentage;
 		worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithFinalScore.TechnologyOrPe].Value = result.FinalScore;
 		worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithStatus.TechnologyOrPe].Value = result.Status.GetString();
@@ -154,6 +118,7 @@ public class PassingPointsService : IPassingPointsService
 		worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithFirstName].Value = result.StudentName.FirstName;
 		worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithMiddleName].Value = result.StudentName.MiddleName;
 		worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithGradeCompeting.Base].Value = result.GradeCompeting;
+		worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithCurrentCompeting.Base].Value = result.CurrentCompeting;
 		worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithPractice].Value = result.DirectionPractice;
 		worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithPercentage.TechnologyOrPe].Value = result.Percentage;
 		worksheet.Cells[row, ExcelPassingPointsInfo.ColumnWithFinalScore.TechnologyOrPe].Value = result.FinalScore;
@@ -183,6 +148,7 @@ public class PassingPointsService : IPassingPointsService
 		worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithFirstName].Value = "Имя";
 		worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithMiddleName].Value = "Отчество";
 		worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithGradeCompeting.Base].Value = "Класс, за который выступает";
+		worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithCurrentCompeting.Base].Value = "Класс, в котором учится";
 		worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithPercentage.Base].Value = "%";
 		worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithFinalScore.Base].Value = "Итоговый балл";
 		worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithStatus.Base].Value = "Статус";
@@ -198,6 +164,7 @@ public class PassingPointsService : IPassingPointsService
 		worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithMiddleName].Value = "Отчество";
 		worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithSex].Value = "Пол";
 		worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithGradeCompeting.Pe].Value = "Класс, за который выступает";
+		worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithCurrentCompeting.Pe].Value = "Класс, в котором учится";
 		worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithPercentage.TechnologyOrPe].Value = "%";
 		worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithFinalScore.TechnologyOrPe].Value = "Итоговый балл";
 		worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithStatus.TechnologyOrPe].Value = "Статус";
@@ -212,6 +179,7 @@ public class PassingPointsService : IPassingPointsService
 		worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithFirstName].Value = "Имя";
 		worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithMiddleName].Value = "Отчество";
 		worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithGradeCompeting.Base].Value = "Класс, за который выступает";
+		worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithCurrentCompeting.Base].Value = "Класс, в котором учится";
 		worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithPractice].Value = "Направление практики";
 		worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithPercentage.TechnologyOrPe].Value = "%";
 		worksheet.Cells[1, ExcelPassingPointsInfo.ColumnWithFinalScore.TechnologyOrPe].Value = "Итоговый балл";
@@ -222,11 +190,9 @@ public class PassingPointsService : IPassingPointsService
 
 	private static void FormatHeader(ExcelWorksheet worksheet)
 	{
-		using (var range = worksheet.Cells[1, 1, 1, 8])
-		{
-			range.Style.Font.Bold = true;
-			range.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-		}
+		using var range = worksheet.Cells[1, 1, 1, 8];
+		range.Style.Font.Bold = true;
+		range.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
 	}
 
 	private async Task<IReadOnlyCollection<IGrouping<int, SchoolOlympiadResultBase>>> GetResults(Subject subject, CancellationToken cancellationToken)

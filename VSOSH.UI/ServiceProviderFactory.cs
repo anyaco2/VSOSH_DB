@@ -94,7 +94,7 @@ public static class ServiceProviderFactory
 		var path = ProfileLocationStorage.LogDirPath;
 		Directory.CreateDirectory(path);
 
-		return BaseLoggerConfigurationProvider.GetBaseLoggerConfig("GamesLibraryService", true);
+		return BaseLoggerConfigurationProvider.GetBaseLoggerConfig("VSOSH", true);
 	}
 	#endregion
 }

@@ -30,7 +30,8 @@ public class GreaterClassService : IGreaterClassService
 	{
 		var pathToFile = Path.Combine(ProfileLocationStorage.ServiceFiles, "За_более_старший_класс.xlsx");
 
-		var results = await _resultRepository.FindRangeAsync<SchoolOlympiadResultBase>(r => r.CurrentCompeting.HasValue, cancellationToken);
+		var results = await _resultRepository.FindRangeAsync<SchoolOlympiadResultBase>(r => r.CurrentCompeting.HasValue && r.CurrentCompeting != r.GradeCompeting,
+																					   cancellationToken);
 
 		using (var excelPackage = new ExcelPackage())
 		{
